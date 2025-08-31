@@ -46,7 +46,7 @@ This version assumes the response body contains:
 \itemize{
 \item Each \code{contacts} element may be a phone number (free text) or a JID
 (e.g., \code{"1203...@g.us"}). Phone numbers are normalized via
-\code{\link[=normalize_to]{normalize_to()}} (12 digits total); JIDs are kept as-is.
+\code{\link[=whapi_normalize_to]{whapi_normalize_to()}} (12 digits total); JIDs are kept as-is.
 \item When \code{full = TRUE}, \verb{_full=true} is added to the querystring to request
 higher-resolution avatars (if supported).
 }

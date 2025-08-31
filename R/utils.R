@@ -1,71 +1,51 @@
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
 #' Normalize WhatsApp contact IDs (phone numbers only)
 #'
 #' @description
 #' Cleans and normalizes WhatsApp phone numbers by:
-#' - Removing all non-digit characters (`+`, spaces, parentheses, hyphens, etc.);
+#' - Skipping normalization if the entry already contains a JID suffix
+#'   (e.g., "@s.whatsapp.net" or "@g.us");
+#' - Otherwise, removing all non-digit characters (`+`, spaces, parentheses, hyphens, etc.);
 #' - Removing the **ninth digit** (when present) right after the country code
-#'   (CC) and area code (SS), in order to standardize the length to 12 or
-#'   13 digits (mobile with ninth digit).
+#'   (CC) and area code (SS), in order to standardize to 12 or 13 digits.
 #'
 #' @details
 #' This function is primarily designed for **Brazilian E.164 numbers** (e.g.,
-#' `+55 (81) 9XXXX-YYYY`):
-#' - After removing non-digits, valid numbers must contain **12 or 13 digits**:
-#'   - **12 digits** → CC(2) + SS(2) + 8-digit number (landline);
-#'   - **13 digits** → CC(2) + SS(2) + 9 + 8-digit number (mobile).
-#' - The regex pattern `"(\\d{2})(\\d{2})(\\d{1})(\\d{8})" -> "\\1\\2\\4"`
-#'   strips out the middle digit (the ninth digit) when it occurs exactly at
-#'   that position (after CC and SS).
+#' `+55 (81) 9XXXX-YYYY`).
 #'
-#' @param to Character. A character vector of WhatsApp phone numbers in free
-#'   text format. Each element may include symbols, spaces, etc.
+#' @param to Character. A character vector of WhatsApp numbers in free
+#'   text format or JIDs.
 #'
-#' @return
-#' A character vector of the same length as `to`, containing digit-only
-#' normalized numbers.
-#' Raises an error (`cli_abort`) if any element cannot be normalized
-#' to 12 or 13 digits.
+#' @return A character vector of normalized IDs (phones → digits only, JIDs kept as-is).
 #'
-#' @section Validation:
-#' - Valid numbers must be **12 or 13 digits** after cleanup;
-#' - The error message will show how many and which indices failed validation.
-#'
-#' @examples
-#' # Mobile and landline examples (Brazil):
-#' normalize_to("+55 (81) 9 1234-5678")
-#' # -> "558112345678" (removes the ninth digit)
-#'
-#' normalize_to("55 81 3123-4567")
-#' # -> "558131234567"
-#'
-#' # Multiple inputs:
-#' normalize_to(c("+55 (81) 9 8765-4321", "55-81-3876-1234"))
-#'
-#' # Error example: invalid length
-#' \dontrun{
-#' normalize_to("5581")  # error: wrong number of digits
-#' }
-#'
-#' @importFrom stringr str_remove_all str_replace str_length
-#' @importFrom cli cli_abort
-normalize_to <- function(to) {
+#' @export
+whapi_normalize_to <- function(to) {
   stopifnot(is.character(to))
-  new_to <- stringr::str_replace(
-    stringr::str_remove_all(to, "\\D"),
-    "(\\d{2})(\\d{2})(\\d{1})(\\d{8})",
-    "\\1\\2\\4"
-  )
-  d <- stringr::str_length(new_to)
-  test <- d < 12 | d > 13
-  if (any(test)) {
-    cli::cli_abort(c(
-      "Valid numbers must have 13 or 12 digits, e.g.: +CC (SS) ZXXXX-YYYY",
-      "i" = "There are {sum(test)} element(s) with the wrong number of digits: {which(test, arr.ind = TRUE)}.",
-      "x" = "{sum(test)} numbers cannot be normalized."
-    ))
-  } else {
-    return(new_to)
+
+  # If element looks like a JID, keep as-is
+  is_jid <- grepl("@s\\.whatsapp\\.net$|@g\\.us$", to, ignore.case = TRUE)
+  new_to <- to
+
+  if (any(!is_jid)) {
+    new_to[!is_jid] <- stringr::str_replace(
+      stringr::str_remove_all(new_to[!is_jid], "\\D"),
+      "(\\d{2})(\\d{2})(\\d{1})(\\d{8})",
+      "\\1\\2\\4"
+    )
+
+    d <- stringr::str_length(new_to[!is_jid])
+    test <- d < 12 | d > 13
+    if (any(test)) {
+      cli::cli_abort(c(
+        "Valid numbers must have 13 or 12 digits, e.g.: +CC (SS) ZXXXX-YYYY",
+        "i" = "There are {sum(test)} element(s) with the wrong number of digits: {which(test, arr.ind = TRUE)}.",
+        "x" = "{sum(test)} numbers cannot be normalized."
+      ))
+    }
   }
+
+  new_to
 }
 
 #' Convert numeric timestamp to POSIXct (UTC)
@@ -84,20 +64,22 @@ normalize_to <- function(to) {
 #'
 #' @examples
 #' # Single timestamp
-#' to_posixct(1756426418)
+#' whapi_to_posixct(1756426418)
 #'
 #' # Vector of timestamps (with NA)
-#' to_posixct(c(1756426418, NA))
+#' whapi_to_posixct(c(1756426418, NA))
 #'
 #' # Character input
-#' to_posixct("1756426418")
+#' whapi_to_posixct("1756426418")
 #'
 #' @seealso [lubridate::as_datetime()]
 #'
 #' @importFrom lubridate as_datetime
-to_posixct <- function(x) {
-  if (is.null(x) || is.na(x)) return(NA)
-  lubridate::as_datetime(as.numeric(x), tz = "UTC")
+#' @export
+whapi_to_posixct <- function(x) {
+  if (is.null(x)) return(lubridate::as_datetime(NA_real_, tz = "UTC"))
+  nx <- suppressWarnings(as.numeric(x))
+  lubridate::as_datetime(nx, tz = "UTC")
 }
 
 #' Extract common fields from Whapi API responses
@@ -153,13 +135,14 @@ to_posixct <- function(x) {
 #' #   )
 #' # )
 #' #
-#' # extract_common_fields(out, fallback_to = "558199999999")
+#' # whapi_extract_common_fields(out, fallback_to = "558199999999")
 #'
 #' @seealso
 #' Used internally in wrappers like [whapi_send_text()],
 #' [whapi_send_image()], [whapi_send_document()],
 #' [whapi_send_location()].
-extract_common_fields <- function(out, fallback_to) {
+#' @export
+whapi_extract_common_fields <- function(out, fallback_to) {
   msg <- out$message %||% list()
 
   id        <- msg$id        %||% out$id        %||% out$message_id %||% NA_character_
@@ -174,7 +157,7 @@ extract_common_fields <- function(out, fallback_to) {
     to          = chat_id,
     status      = status,
     timestamp   = ts,
-    timestamp_dt= to_posixct(ts),
+    timestamp_dt= whapi_to_posixct(ts),
     type        = mtype,
     sent        = sent,
     resp        = list(out)
@@ -199,13 +182,14 @@ extract_common_fields <- function(out, fallback_to) {
 #' @return Parsed JSON response as a list.
 #'
 #' @examples
-#' # out <- perform_request("messages/text", list(to="5581...", body="Hi"), method="POST")
-#' # out <- perform_request("messages/12345", list(status="read"), method="PUT")
+#' # out <- whapi_perform_request("messages/text", list(to="5581...", body="Hi"), method="POST")
+#' # out <- whapi_perform_request("messages/12345", list(status="read"), method="PUT")
 #'
 #' @importFrom httr2 request req_method req_headers req_body_json req_url_query
 #'   req_timeout req_retry req_error req_perform resp_body_json
 #' @importFrom cli cli_inform cli_abort
-perform_request <- function(
+#' @export
+whapi_perform_request <- function(
     endpoint,
     payload = NULL,
     token   = Sys.getenv("WHAPI_TOKEN", unset = ""),
@@ -290,6 +274,7 @@ perform_request <- function(
 #' #   mentions = c("5581999999999"),
 #' #   typing_time = 2, no_link_preview = TRUE
 #' # )
+#' @export
 whapi_send_text <- function(
     to,
     body,
@@ -314,7 +299,7 @@ whapi_send_text <- function(
     stop("Token not found. Provide `token` or set env var WHAPI_TOKEN.")
   }
 
-  to_clean <- normalize_to(to)
+  to_clean <- whapi_normalize_to(to)
 
   body_list <- list(
     to = to_clean,
@@ -324,7 +309,7 @@ whapi_send_text <- function(
     typing_time = typing_time,
     no_link_preview = no_link_preview,
     wide_link_preview = wide_link_preview,
-    mentions = if (is.null(mentions)) NULL else as.list(normalize_to(as.character(mentions))),
+    mentions = if (is.null(mentions)) NULL else as.list(whapi_normalize_to(as.character(mentions))),
     view_once = view_once
   )
   body_list <- body_list[!vapply(body_list, is.null, logical(1))]
@@ -339,7 +324,7 @@ whapi_send_text <- function(
   }
 
   # Use the generic request function
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/text",
     payload  = body_list,
     token    = token,
@@ -348,7 +333,7 @@ whapi_send_text <- function(
     method = "POST"
   )
 
-  extract_common_fields(out, fallback_to = to_clean)
+  whapi_extract_common_fields(out, fallback_to = to_clean)
 }
 
 
@@ -366,6 +351,7 @@ whapi_send_text <- function(
 #'
 #' @examples
 #' # whapi_get_message("PsobWy36679._7w-wKmB9tMeGQ")
+#' @export
 whapi_get_message <- function(
     message_id,
     resync  = FALSE,
@@ -380,7 +366,7 @@ whapi_get_message <- function(
 
   endpoint <- sprintf("messages/%s", message_id)
 
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = endpoint,
     payload  = list(resync = tolower(as.character(isTRUE(resync)))),
     token    = token,
@@ -403,7 +389,7 @@ whapi_get_message <- function(
     from_me      = msg$from_me    %||% NA,
     source       = msg$source     %||% NA_character_,
     timestamp    = msg$timestamp  %||% NA_real_,
-    timestamp_dt = to_posixct(msg$timestamp %||% NA_real_),
+    timestamp_dt = whapi_to_posixct(msg$timestamp %||% NA_real_),
     device_id    = msg$device_id  %||% NA_real_,
     status       = msg$status     %||% NA_character_,
     resp         = list(out)
@@ -411,7 +397,7 @@ whapi_get_message <- function(
 }
 
 
-#' Slugify strings for safe IDs (e.g., button IDs in Whapi)
+#' whapi_slugify strings for safe IDs (e.g., button IDs in Whapi)
 #'
 #' @description
 #' Converts free-text labels into a safe "slug" format suitable for use as
@@ -422,7 +408,7 @@ whapi_get_message <- function(
 #' @details
 #' This function is particularly useful when creating interactive messages
 #' (buttons, lists) in WhatsApp via Whapi, where each button requires a valid
-#' `id`. By slugifying titles automatically, we can safely generate IDs even if
+#' `id`. By whapi_slugifying titles automatically, we can safely generate IDs even if
 #' users provide arbitrary labels with spaces, accents, or symbols.
 #'
 #' Transformation steps:
@@ -436,19 +422,20 @@ whapi_get_message <- function(
 #' @return A character vector of the same length with slugified IDs.
 #'
 #' @examples
-#' .slugify(c("Yes!", "Call Us", "Promoção Rápida", "###"))
+#' whapi_slugify(c("Yes!", "Call Us", "Promoção Rápida", "###"))
 #' # -> "yes", "call_us", "promocao_rapida", "btn"
 #'
 #' # Use case in button creation:
 #' titles <- c("Buy Now", "Learn More")
-#' ids <- .slugify(titles)
+#' ids <- .whapi_slugify(titles)
 #' tibble::tibble(title = titles, id = ids)
 #'
 #' @seealso Used internally in `whapi_send_quick_reply()` and other
 #' interactive message helpers.
 #'
 #' @importFrom stringr str_to_lower str_replace_all str_replace str_trim str_length
-slugify <- function(x) {
+#' @export
+whapi_slugify <- function(x) {
   x <- stringr::str_to_lower(x)
   x <- stringr::str_replace_all(x, "[^a-z0-9]+", "_")
   x <- stringr::str_replace(x, "^_+|_+$", "")
@@ -466,7 +453,7 @@ slugify <- function(x) {
 #'
 #' @details
 #' This helper is particularly useful when generating button IDs for
-#' WhatsApp interactive messages via Whapi. Even after slugifying labels,
+#' WhatsApp interactive messages via Whapi. Even after whapi_slugifying labels,
 #' duplicates may remain (e.g., two buttons both titled `"Yes"`).
 #' The function guarantees uniqueness by incrementally appending a suffix.
 #'
@@ -481,18 +468,19 @@ slugify <- function(x) {
 #' @return A character vector of the same length with unique IDs.
 #'
 #' @examples
-#' make_unique(c("yes", "no", "yes", "yes", "maybe", "no"))
+#' whapi_make_unique(c("yes", "no", "yes", "yes", "maybe", "no"))
 #' # -> "yes", "no", "yes_2", "yes_3", "maybe", "no_2"
 #'
-#' # Combined with .slugify
+#' # Combined with .whapi_slugify
 #' titles <- c("Yes!", "Yes!", "No?")
-#' ids <- make_unique(slugify(titles))
+#' ids <- whapi_make_unique(whapi_slugify(titles))
 #' tibble::tibble(title = titles, id = ids)
 #'
-#' @seealso [.slugify()] for slug-safe ID creation.
+#' @seealso [.whapi_slugify()] for slug-safe ID creation.
 #'
 #' @importFrom purrr map_chr
-make_unique <- function(x) {
+#' @export
+whapi_make_unique <- function(x) {
   seen <- list()
   purrr::map_chr(x, function(s) {
     n <- seen[[s]] %||% 0L
@@ -512,7 +500,7 @@ make_unique <- function(x) {
 #' interactive messages (`button`, `list`, `mixed actions`, etc.).
 #'
 #' It automatically normalizes the recipient (`to`) using
-#' [normalize_to()], and creates `header`, `body`, and `footer` blocks
+#' [whapi_normalize_to()], and creates `header`, `body`, and `footer` blocks
 #' only if the corresponding text is provided.
 #'
 #' @details
@@ -539,10 +527,10 @@ make_unique <- function(x) {
 #'
 #' @examples
 #' # Minimal body only
-#' common_blocks("5581999999999", body_text = "Choose an option below")
+#' whapi_common_blocks("5581999999999", body_text = "Choose an option below")
 #'
 #' # With header and footer
-#' common_blocks(
+#' whapi_common_blocks(
 #'   to = "5581999999999",
 #'   body_text   = "Do you confirm?",
 #'   header_text = "Booking Confirmation",
@@ -551,9 +539,10 @@ make_unique <- function(x) {
 #'
 #' @seealso [whapi_send_quick_reply()], [whapi_send_list()],
 #' [whapi_send_mixed_actions()]
-common_blocks <- function(to, body_text, header_text = NULL, footer_text = NULL) {
+#' @export
+whapi_common_blocks <- function(to, body_text, header_text = NULL, footer_text = NULL) {
   list(
-    to     = normalize_to(to),
+    to     = whapi_normalize_to(to),
     header = if (!is.null(header_text)) list(text = header_text) else NULL,
     body   = list(text = body_text),
     footer = if (!is.null(footer_text)) list(text = footer_text) else NULL
@@ -588,21 +577,21 @@ common_blocks <- function(to, body_text, header_text = NULL, footer_text = NULL)
 #' @examples
 #' # From tibble (title only → ids auto-generated)
 #' # tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
-#' #   coerce_buttons_base()
+#' #   whapi_coerce_buttons_base()
 #'
 #' # From list (mix with/without id)
-#' # coerce_buttons_base(list(
+#' # whapi_coerce_buttons_base(list(
 #' #   list(title = "Website", url = "https://example.com"),
 #' #   list(title = "Website")  # will get an auto id too
 #' # ))
 #'
-#' @seealso `.slugify()`, `make_unique()`
+#' @seealso `.whapi_slugify()`, `whapi_make_unique()`
 #'
 #' @importFrom purrr transpose map map_lgl map_chr imap
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom stringr str_trim str_length
-coerce_buttons_base <- function(buttons, verbose = TRUE) {
-  `%||%` <- function(x, y) if (is.null(x)) y else x
+#' @export
+whapi_coerce_buttons_base <- function(buttons, verbose = TRUE) {
 
   if (is.null(buttons)) {
     if (isTRUE(verbose)) cli::cli_inform(c("i" = "No buttons provided (NULL)."))
@@ -647,10 +636,10 @@ coerce_buttons_base <- function(buttons, verbose = TRUE) {
     ))
   }
 
-  # Auto-generate id if missing: slugify titles and enforce uniqueness
+  # Auto-generate id if missing: whapi_slugify titles and enforce uniqueness
   titles   <- purrr::map_chr(btns, ~ .x$title %||% "")
-  slug_ids <- slugify(titles)
-  uniq_ids <- make_unique(slug_ids)
+  slug_ids <- whapi_slugify(titles)
+  uniq_ids <- whapi_make_unique(slug_ids)
 
   missing_id_idx <- integer(0)
   btns <- purrr::imap(btns, ~ {
@@ -680,7 +669,7 @@ coerce_buttons_base <- function(buttons, verbose = TRUE) {
 #'
 #' @description
 #' Internal helper that prepares **quick reply** buttons for Whapi interactive
-#' messages. It relies on [coerce_buttons_base()] to normalize input
+#' messages. It relies on [whapi_coerce_buttons_base()] to normalize input
 #' (accept `data.frame`/`list`, map aliases `label`/`name` → `title`,
 #' auto-generate `id` via slug + uniqueness) and then:
 #' - Enforces `type = "quick_reply"` for all buttons;
@@ -689,7 +678,7 @@ coerce_buttons_base <- function(buttons, verbose = TRUE) {
 #'
 #' @param buttons A `data.frame`/`tibble` (one row per button) or a list of
 #'   named lists. `title` is required (or via alias), `id` will be auto-created
-#'   when missing by [coerce_buttons_base()].
+#'   when missing by [whapi_coerce_buttons_base()].
 #' @param verbose Logical (default `TRUE`). If `TRUE`, prints progress messages
 #'   via \pkg{cli}.
 #'
@@ -698,17 +687,18 @@ coerce_buttons_base <- function(buttons, verbose = TRUE) {
 #'
 #' @examples
 #' # tibble::tribble(~title, "YES", "NO") |>
-#' #   coerce_buttons_base() |>
-#' #   coerce_buttons_quick()
+#' #   whapi_coerce_buttons_base() |>
+#' #   whapi_coerce_buttons_quick()
 #'
-#' @seealso [coerce_buttons_base()] for normalization; other coercers for
+#' @seealso [whapi_coerce_buttons_base()] for normalization; other coercers for
 #'   mixed buttons (url/call/copy).
 #'
 #' @importFrom purrr map
 #' @importFrom cli cli_inform cli_abort
-coerce_buttons_quick <- function(buttons, verbose = TRUE) {
+#' @export
+whapi_coerce_buttons_quick <- function(buttons, verbose = TRUE) {
   # normalize base (title/id mapping and autogen)
-  btns <- coerce_buttons_base(buttons, verbose = verbose)
+  btns <- whapi_coerce_buttons_base(buttons, verbose = verbose)
 
   n <- length(btns)
   if (n < 1) {
@@ -746,7 +736,7 @@ coerce_buttons_quick <- function(buttons, verbose = TRUE) {
 #'
 #' @description
 #' Internal helper that prepares **mixed action** buttons for Whapi interactive
-#' messages. It first normalizes input via [coerce_buttons_base()] (accepts
+#' messages. It first normalizes input via [whapi_coerce_buttons_base()] (accepts
 #' `data.frame`/`tibble` or `list`, maps aliases to `title`, auto-creates `id`
 #' with slug + uniqueness) and then validates each button according to its
 #' declared `type`:
@@ -758,7 +748,7 @@ coerce_buttons_quick <- function(buttons, verbose = TRUE) {
 #'
 #' @param buttons A `data.frame`/`tibble` (one row per button) or a list of
 #'   named lists. `title` is required (or via alias), `id` is auto-generated
-#'   when missing by [coerce_buttons_base()]. Each button **must provide**
+#'   when missing by [whapi_coerce_buttons_base()]. Each button **must provide**
 #'   a valid `type` among `{"url","call","copy"}`.
 #' @param verbose Logical (default `TRUE`). If `TRUE`, prints progress messages
 #'   via \pkg{cli}.
@@ -774,24 +764,25 @@ coerce_buttons_quick <- function(buttons, verbose = TRUE) {
 #' #   "Website",     "url", "https://example.com",
 #' #   "Call Support","call", NA
 #' # ) |>
-#' #   coerce_buttons_base() |>
-#' #   coerce_buttons_mixed()
+#' #   whapi_coerce_buttons_base() |>
+#' #   whapi_coerce_buttons_mixed()
 #'
 #' # Example with a list:
-#' # coerce_buttons_mixed(list(
+#' # whapi_coerce_buttons_mixed(list(
 #' #   list(type="url",  title="Website", url="https://example.com"),
 #' #   list(type="call", title="Call us", phone_number="5581999999999"),
 #' #   list(type="copy", title="Copy OTP", copy_code="123456")
 #' # ))
 #'
-#' @seealso [coerce_buttons_base()] for normalization;
-#'   [coerce_buttons_quick()] for quick-reply buttons.
+#' @seealso [whapi_coerce_buttons_base()] for normalization;
+#'   [whapi_coerce_buttons_quick()] for quick-reply buttons.
 #'
 #' @importFrom purrr map
 #' @importFrom cli cli_inform cli_abort
-coerce_buttons_mixed <- function(buttons, verbose = TRUE) {
+#' @export
+whapi_coerce_buttons_mixed <- function(buttons, verbose = TRUE) {
   # Normalize base (title/id mapping and autogen)
-  btns <- coerce_buttons_base(buttons, verbose = verbose)
+  btns <- whapi_coerce_buttons_base(buttons, verbose = verbose)
 
   n <- length(btns)
   if (n < 1) {
@@ -884,16 +875,17 @@ coerce_buttons_mixed <- function(buttons, verbose = TRUE) {
 #'     )
 #'   )
 #' )
-#' validate_list_sections(sections)
+#' whapi_validate_list_sections(sections)
 #'
 #' @seealso
-#' Helpers for interactive payloads such as `coerce_buttons_base()`,
-#' `coerce_buttons_quick()`, and `coerce_buttons_mixed()`.
+#' Helpers for interactive payloads such as `whapi_coerce_buttons_base()`,
+#' `whapi_coerce_buttons_quick()`, and `whapi_coerce_buttons_mixed()`.
 #'
 #' @importFrom purrr iwalk walk
 #' @importFrom stringr str_trim str_length
 #' @importFrom cli cli_inform cli_abort
-validate_list_sections <- function(list_sections, verbose = TRUE, trim = TRUE) {
+#' @export
+whapi_validate_list_sections <- function(list_sections, verbose = TRUE, trim = TRUE) {
   # quick shape checks
   if (is.null(list_sections) || !is.list(list_sections) || length(list_sections) < 1) {
     cli::cli_abort("For a LIST message, provide `list_sections` as a non-empty list of sections.")
@@ -946,7 +938,7 @@ validate_list_sections <- function(list_sections, verbose = TRUE, trim = TRUE) {
 #'
 #' @description
 #' Sends an interactive message of type **QUICK REPLY** via Whapi.
-#' Each button is normalized/validated by [coerce_buttons_quick()] and
+#' Each button is normalized/validated by [whapi_coerce_buttons_quick()] and
 #' automatically gets a unique slugified `id` if missing.
 #'
 #' @param to Character (length 1). Phone in E.164 digits (without "+") or group id.
@@ -967,7 +959,8 @@ validate_list_sections <- function(list_sections, verbose = TRUE, trim = TRUE) {
 #' #   buttons = tibble::tribble(~title, "YES", "NO")
 #' # )
 #'
-#' @seealso [coerce_buttons_quick()], [common_blocks()], [perform_request()]
+#' @seealso [whapi_coerce_buttons_quick()], [whapi_common_blocks()], [whapi_perform_request()]
+#' @export
 whapi_send_quick_reply <- function(
     to,
     body_text,
@@ -982,8 +975,8 @@ whapi_send_quick_reply <- function(
   if (!requireNamespace("cli", quietly = TRUE)) stop("Package 'cli' is required.")
 
   # normalize and build payload
-  blocks <- common_blocks(normalize_to(to), body_text, header_text, footer_text)
-  btns   <- coerce_buttons_quick(buttons, verbose = verbose)
+  blocks <- whapi_common_blocks(whapi_normalize_to(to), body_text, header_text, footer_text)
+  btns   <- whapi_coerce_buttons_quick(buttons, verbose = verbose)
 
   payload <- list(
     to     = blocks$to,
@@ -1004,7 +997,7 @@ whapi_send_quick_reply <- function(
     ))
   }
 
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/interactive",
     payload  = payload,
     token    = token,
@@ -1013,7 +1006,7 @@ whapi_send_quick_reply <- function(
     method   = "POST"
   )
 
-  result <- extract_common_fields(out, fallback_to = blocks$to)
+  result <- whapi_extract_common_fields(out, fallback_to = blocks$to)
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c("v" = paste0("QUICK REPLY sent (id=", result$id, "). Status: ", result$status)))
@@ -1028,7 +1021,7 @@ whapi_send_quick_reply <- function(
 #' @description
 #' Sends an interactive **buttons** message that mixes `url`, `call`, and/or
 #' `copy` actions. Input buttons are normalized/validated by
-#' [coerce_buttons_mixed()] (aliases mapped to `title`, auto `id` creation,
+#' [whapi_coerce_buttons_mixed()] (aliases mapped to `title`, auto `id` creation,
 #' required fields per type).
 #'
 #' @param to Character(1). Phone in E.164 digits (without "+") or group id.
@@ -1060,7 +1053,8 @@ whapi_send_quick_reply <- function(
 #' #   )
 #' # )
 #'
-#' @seealso [coerce_buttons_mixed()], [common_blocks()], [perform_request()]
+#' @seealso [whapi_coerce_buttons_mixed()], [whapi_common_blocks()], [whapi_perform_request()]
+#' @export
 whapi_send_mixed_actions <- function(
     to,
     body_text,
@@ -1075,8 +1069,8 @@ whapi_send_mixed_actions <- function(
   if (!requireNamespace("cli",    quietly = TRUE)) stop("Package 'cli' is required.")
 
   # Normalize and build blocks
-  blocks <- common_blocks(normalize_to(to), body_text, header_text, footer_text)
-  btns   <- coerce_buttons_mixed(buttons, verbose = verbose)
+  blocks <- whapi_common_blocks(whapi_normalize_to(to), body_text, header_text, footer_text)
+  btns   <- whapi_coerce_buttons_mixed(buttons, verbose = verbose)
 
   # Build payload for interactive buttons
   payload <- list(
@@ -1104,7 +1098,7 @@ whapi_send_mixed_actions <- function(
   }
 
   # Perform request (POST /messages/interactive)
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/interactive",
     payload  = payload,
     token    = token,
@@ -1113,7 +1107,7 @@ whapi_send_mixed_actions <- function(
     method   = "POST"
   )
 
-  result <- extract_common_fields(out, fallback_to = blocks$to)
+  result <- whapi_extract_common_fields(out, fallback_to = blocks$to)
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c("v" = paste0("MIXED-ACTIONS sent (id=", result$id, "). Status: ", result$status)))
@@ -1128,8 +1122,8 @@ whapi_send_mixed_actions <- function(
 #'
 #' @description
 #' Sends an interactive **LIST** message via Whapi.
-#' Sections/rows are validated by [validate_list_sections()]. The payload
-#' reuses [common_blocks()] to keep structure consistent across interactive
+#' Sections/rows are validated by [whapi_validate_list_sections()]. The payload
+#' reuses [whapi_common_blocks()] to keep structure consistent across interactive
 #' message types.
 #'
 #' @param to Character(1). Phone in E.164 digits (without "+") or group id.
@@ -1173,8 +1167,9 @@ whapi_send_mixed_actions <- function(
 #' #   footer_text = "Thanks!"
 #' # )
 #'
-#' @seealso [validate_list_sections()], [common_blocks()],
-#'   [perform_request()], [extract_common_fields()]
+#' @seealso [whapi_validate_list_sections()], [whapi_common_blocks()],
+#'   [whapi_perform_request()], [whapi_extract_common_fields()]
+#' @export
 whapi_send_list <- function(
     to,
     body_text,
@@ -1190,8 +1185,8 @@ whapi_send_list <- function(
   if (!requireNamespace("cli",    quietly = TRUE)) stop("Package 'cli' is required.")
 
   # blocos básicos + validação das seções/linhas
-  blocks <- common_blocks(normalize_to(to), body_text, header_text, footer_text)
-  secs   <- validate_list_sections(list_sections, verbose = verbose, trim = TRUE)
+  blocks <- whapi_common_blocks(whapi_normalize_to(to), body_text, header_text, footer_text)
+  secs   <- whapi_validate_list_sections(list_sections, verbose = verbose, trim = TRUE)
 
   payload <- list(
     to     = blocks$to,
@@ -1217,7 +1212,7 @@ whapi_send_list <- function(
   }
 
   # POST /messages/interactive
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/interactive",
     payload  = payload,
     token    = token,
@@ -1226,7 +1221,7 @@ whapi_send_list <- function(
     method   = "POST"
   )
 
-  result <- extract_common_fields(out, fallback_to = blocks$to)
+  result <- whapi_extract_common_fields(out, fallback_to = blocks$to)
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c("v" = paste0("LIST sent (id=", result$id, "). Status: ", result$status)))
@@ -1250,7 +1245,7 @@ whapi_send_list <- function(
 #' @details
 #' - Each `contacts` element may be a phone number (free text) or a JID
 #'   (e.g., `"1203...@g.us"`). Phone numbers are normalized via
-#'   [normalize_to()] (12 digits total); JIDs are kept as-is.
+#'   [whapi_normalize_to()] (12 digits total); JIDs are kept as-is.
 #' - When `full = TRUE`, `_full=true` is added to the querystring to request
 #'   higher-resolution avatars (if supported).
 #'
@@ -1278,6 +1273,7 @@ whapi_send_list <- function(
 #' @importFrom purrr map_chr map_dfr
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom stringr str_detect
+#' @export
 whapi_get_contact_profile <- function(
     contacts,
     token   = Sys.getenv("WHAPI_TOKEN", unset = ""),
@@ -1290,13 +1286,11 @@ whapi_get_contact_profile <- function(
   if (!requireNamespace("cli",    quietly = TRUE)) stop("Package 'cli' is required.")
   if (!requireNamespace("stringr",quietly = TRUE)) stop("Package 'stringr' is required.")
 
-  `%||%` <- function(x, y) if (is.null(x)) y else x
-
   stopifnot(is.character(contacts), length(contacts) >= 1L)
   if (!nzchar(token)) cli::cli_abort("Token not found. Provide `token` or set WHAPI_TOKEN.")
 
   # Normalize phones; keep JIDs as-is
-  ids <- purrr::map_chr(contacts, ~ if (stringr::str_detect(.x, "@")) { .x } else { normalize_to(.x) })
+  ids <- purrr::map_chr(contacts, ~ if (stringr::str_detect(.x, "@")) { .x } else { whapi_normalize_to(.x) })
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
@@ -1309,7 +1303,7 @@ whapi_get_contact_profile <- function(
     endpoint <- sprintf("contacts/%s/profile", cid)
     query    <- if (isTRUE(full)) list(`_full` = "true") else NULL
 
-    out <- perform_request(
+    out <- whapi_perform_request(
       endpoint = endpoint,
       payload  = query,          # query params for GET
       token    = token,
@@ -1365,6 +1359,7 @@ whapi_get_contact_profile <- function(
 #' @importFrom openssl base64_encode
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
+#' @export
 whapi_send_image <- function(
     to,
     image,
@@ -1386,7 +1381,7 @@ whapi_send_image <- function(
   stopifnot(is.character(image), length(image) == 1L, nzchar(image))
   if (!nzchar(token)) cli::cli_abort("Token not found. Provide `token` or set WHAPI_TOKEN.")
 
-  to_clean <- normalize_to(to)
+  to_clean <- whapi_normalize_to(to)
 
   # Build `media` according to type
   if (type == "file") {
@@ -1428,7 +1423,7 @@ whapi_send_image <- function(
   }
 
   # POST /messages/image using the generic helper
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/image",
     payload  = payload,
     token    = token,
@@ -1437,7 +1432,7 @@ whapi_send_image <- function(
     method   = "POST"
   )
 
-  extract_common_fields(out, fallback_to = to_clean)
+  whapi_extract_common_fields(out, fallback_to = to_clean)
 }
 
 
@@ -1479,6 +1474,7 @@ whapi_send_image <- function(
 #' @importFrom openssl base64_encode
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
+#' @export
 whapi_send_document <- function(
     to,
     document,
@@ -1501,7 +1497,7 @@ whapi_send_document <- function(
   stopifnot(is.character(document), length(document) == 1L, nzchar(document))
   if (!nzchar(token)) cli::cli_abort("Token not found. Provide `token` or set WHAPI_TOKEN.")
 
-  to_clean <- normalize_to(to)
+  to_clean <- whapi_normalize_to(to)
 
   infer_name_from_url <- function(u) {
     # remove query/fragment, then take basename
@@ -1566,7 +1562,7 @@ whapi_send_document <- function(
   }
 
   # POST /messages/document via the generic helper
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/document",
     payload  = payload,
     token    = token,
@@ -1575,7 +1571,7 @@ whapi_send_document <- function(
     method   = "POST"
   )
 
-  extract_common_fields(out, fallback_to = to_clean)
+  whapi_extract_common_fields(out, fallback_to = to_clean)
 }
 
 
@@ -1608,6 +1604,7 @@ whapi_send_document <- function(
 #'
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
+#' @export
 whapi_send_location <- function(
     to,
     latitude,
@@ -1634,7 +1631,7 @@ whapi_send_location <- function(
   if (!nzchar(token))
     cli::cli_abort("Token not found. Provide `token` or set WHAPI_TOKEN.")
 
-  to_clean <- normalize_to(to)
+  to_clean <- whapi_normalize_to(to)
 
   # Payload as per Whapi Location message
   payload <- list(
@@ -1659,7 +1656,7 @@ whapi_send_location <- function(
   }
 
   # POST /messages/location via generic helper
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/location",
     payload  = payload,
     token    = token,
@@ -1668,7 +1665,7 @@ whapi_send_location <- function(
     method   = "POST"
   )
 
-  extract_common_fields(out, fallback_to = to_clean)
+  whapi_extract_common_fields(out, fallback_to = to_clean)
 }
 
 #' Mark a WhatsApp message as READ (Whapi.Cloud)
@@ -1696,6 +1693,7 @@ whapi_send_location <- function(
 #'
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
+#' @export
 whapi_mark_message_read <- function(
     message_id,
     token   = Sys.getenv("WHAPI_TOKEN", unset = ""),
@@ -1718,7 +1716,7 @@ whapi_mark_message_read <- function(
   }
 
   # Algumas instâncias aceitam corpo vazio; aqui usamos {"status":"read"} por compatibilidade.
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = endpoint,
     payload  = list(status = "read"),
     token    = token,
@@ -1779,6 +1777,7 @@ whapi_mark_message_read <- function(
 #'
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
+#' @export
 whapi_react_to_message <- function(
     message_id,
     emoji,
@@ -1803,7 +1802,7 @@ whapi_react_to_message <- function(
     ))
   }
 
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = endpoint,
     payload  = list(emoji = emoji),
     token    = token,
@@ -1833,7 +1832,7 @@ whapi_react_to_message <- function(
 }
 
 
-#' Check Whapi.Cloud health and channel status
+#' Check Whapi.Cloud channel health and status
 #'
 #' @description
 #' Calls `GET /health` to retrieve channel status, versions,
@@ -1864,6 +1863,7 @@ whapi_react_to_message <- function(
 #'
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
+#' @export
 whapi_check_health <- function(
     wakeup       = TRUE,
     channel_type = c("web", "mobile"),
@@ -1890,7 +1890,7 @@ whapi_check_health <- function(
     ))
   }
 
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "health",
     payload  = query,
     token    = token,
@@ -1954,6 +1954,7 @@ whapi_check_health <- function(
 #' # b64 <- openssl::base64_encode(readBin("sticker.webp","raw",file.info("sticker.webp")$size))
 #' # data_uri <- sprintf("data:image/webp;name=%s;base64,%s", basename("sticker.webp"), b64)
 #' # whapi_send_sticker("558191812121", sticker = data_uri, type = "base64")
+#' @export
 whapi_send_sticker <- function(
     to,
     sticker,
@@ -1972,7 +1973,7 @@ whapi_send_sticker <- function(
   stopifnot(is.character(sticker), length(sticker) == 1L, nzchar(sticker))
   if (!nzchar(token)) cli::cli_abort("Token not found. Provide `token` or set WHAPI_TOKEN.")
 
-  to_clean <- normalize_to(to)
+  to_clean <- whapi_normalize_to(to)
 
   # Build media according to type
   if (type == "file") {
@@ -2008,7 +2009,7 @@ whapi_send_sticker <- function(
     ))
   }
 
-  out <- perform_request(
+  out <- whapi_perform_request(
     endpoint = "messages/sticker",
     payload  = payload,
     token    = token,
@@ -2017,5 +2018,211 @@ whapi_send_sticker <- function(
     method   = "POST"
   )
 
-  extract_common_fields(out, fallback_to = to_clean)
+  whapi_extract_common_fields(out, fallback_to = to_clean)
+}
+
+
+
+#' Build Whapi service sections from a tibble (with `section` column)
+#'
+#' @description
+#' Converts a tibble of services (with columns `id`, `title`, `description`, and `section`)
+#' into a nested list of **sections/rows** in the format expected by Whapi interactive
+#' messages.
+#'
+#' @details
+#' - If `section_order = NULL`, all sections are included, ordered alphabetically.
+#' - If `section_order` is provided, it acts as both:
+#'   - a **filter**: only sections listed will be included,
+#'   - and an **order**: sections appear in the same order as in `section_order`.
+#'
+#' Within each section, rows are ordered by the numeric part of `id`
+#' (via `readr::parse_number(id)`).
+#'
+#' @param tbl A tibble/data.frame containing at least:
+#' - `section`   (chr): section name
+#' - `id`        (chr): unique identifier (e.g., `"ap1"`, `"r2"`, `"os3"`)
+#' - `title`     (chr): display title (can include emoji)
+#' - `descricao` (chr): short description of the service
+#' @param section_order Character vector defining desired order (and subset) of sections.
+#'   If `NULL`, all sections are included in alphabetical order.
+#'
+#' @return A list of sections, where each section is a list with:
+#' - `title`: section title
+#' - `rows`: a list of rows, each being a list with `id`, `title`, and `description`
+#'
+#' @examples
+#' de_para_servicos <- tibble::tibble(
+#'   section   = c("Outros Serviços","Renovações","Anuência Prévia"),
+#'   id        = c("os2","r4","ap1"),
+#'   title     = c("🔍 Consulta Prévia",
+#'                 "📄 Renovação de Consulta Prévia",
+#'                 "🗂️ Desmembramento"),
+#'   descricao = c("Initial analysis…","Renewal…","Technical authorization…")
+#' )
+#'
+#' # All sections (alphabetical)
+#' whapi_build_servicos_sections(de_para_servicos)
+#'
+#' # Custom order and filter
+#' whapi_build_servicos_sections(
+#'   de_para_servicos,
+#'   section_order = c("Anuência Prévia","Outros Serviços")
+#' )
+#'
+#' @export
+whapi_build_servicos_sections <- function(tbl, section_order = NULL) {
+  stopifnot(all(c("section","id","title","descricao") %in% names(tbl)))
+
+  tbl2 <- tbl %>%
+    dplyr::mutate(ord = readr::parse_number(.data$id)) %>%
+    dplyr::filter(!is.na(.data$section))
+
+  if (!is.null(section_order)) {
+    # filter + keep order
+    tbl2 <- tbl2 %>%
+      dplyr::filter(.data$section %in% section_order) %>%
+      dplyr::mutate(section = factor(.data$section, levels = section_order))
+  } else {
+    # alphabetical
+    tbl2 <- tbl2 %>%
+      dplyr::mutate(section = factor(.data$section, levels = sort(unique(.data$section))))
+  }
+
+  tbl2 <- tbl2 %>%
+    dplyr::arrange(.data$section, .data$ord)
+
+  sections <- split(tbl2, tbl2$section) %>%
+    purrr::map(function(df_sec) {
+      rows <- purrr::pmap(df_sec[, c("id","title","descricao")],
+                          function(id, title, descricao) {
+                            list(id = id, title = title, description = descricao)
+                          })
+      list(title = as.character(unique(df_sec$section)), rows = rows)
+    }) %>%
+    unname()
+
+  sections
+}
+
+
+#' Convert text to lowercase ASCII (remove accents)
+#'
+#' @description
+#' Converts input text to lowercase and strips diacritics (accents) by
+#' applying a `latin-ascii` transliteration. Useful for normalization before
+#' matching or slug generation.
+#'
+#' @param x Character vector or string. If `NULL`, an empty string is used.
+#'
+#' @return A character vector in lowercase ASCII without accents.
+#' @examples
+#' whapi_to_ascii_lower("São Paulo")
+#' #> "sao paulo"
+#' @export
+whapi_to_ascii_lower <- function(x) {
+  stringr::str_to_lower(stringi::stri_trans_general(x %||% "", "latin-ascii"))
+}
+
+#' Keep only digits from a string
+#'
+#' @description
+#' Removes all non-digit characters from the input string. Useful for cleaning
+#' phone numbers, CNPJs/CPFs, or process codes.
+#'
+#' @param x Character vector or string. If `NULL`, an empty string is used.
+#'
+#' @return A string containing only numeric digits.
+#' @examples
+#' whapi_only_digits("(81) 98765-4321")
+#' #> "81987654321"
+#' @export
+whapi_only_digits <- function(x) {
+  stringr::str_replace_all(x %||% "", "\\D+", "")
+}
+
+#' Digit matching helper (with partial threshold)
+#'
+#' @description
+#' Matches a digit-only `needle` inside a digit-only `haystack`.
+#' If `needle` has at least `min_partial` digits, partial matching is allowed.
+#' Otherwise, only exact matches are considered.
+#'
+#' @param haystack String with potential digits to search in.
+#' @param needle String with digits to search for.
+#' @param min_partial Minimum number of digits required to allow partial match.
+#'
+#' @return Logical (`TRUE`/`FALSE`) indicating whether a match was found.
+#' @examples
+#' whapi_match_digits("tel: 81998765432", "987654")
+#' #> TRUE
+#' whapi_match_digits("12345", "123", min_partial = 4)
+#' #> FALSE
+#' @export
+whapi_match_digits <- function(haystack, needle, min_partial = 6) {
+  hs <- whapi_only_digits(haystack); nd <- whapi_only_digits(needle)
+  if (!nzchar(nd)) return(FALSE)
+  if (nchar(nd) >= min_partial) stringr::str_detect(hs, stringr::fixed(nd)) else (nzchar(hs) && identical(hs, nd))
+}
+
+#' Clip long text with ellipsis
+#'
+#' @description
+#' Shortens text to a maximum width (character length). If the text is longer,
+#' it is truncated and an ellipsis (default `"…"`) is appended.
+#'
+#' @param x Character string to clip.
+#' @param width Maximum length of the output including ellipsis.
+#' @param ellipsis Character to indicate truncation.
+#'
+#' @return A clipped string with ellipsis if needed.
+#' @examples
+#' whapi_clip_text("This is a very long sentence that should be clipped.", width = 20)
+#' #> "This is a very long…"
+#' @export
+whapi_clip_text <- function(x, width = 420, ellipsis = "…") {
+  x <- stringr::str_trim(x %||% "")
+  if (!nzchar(x)) return("")
+  if (nchar(x) <= width) x else paste0(substr(x, 1, width - nchar(ellipsis)), ellipsis)
+}
+
+#' Days between two dates
+#'
+#' @description
+#' Calculates the difference in days between two dates (`end - start`).
+#' Returns `NA` if the start date is missing.
+#'
+#' @param start Start date (`Date` or coercible).
+#' @param end End date (`Date` or coercible).
+#'
+#' @return Integer number of days, or `NA` if `start` is missing.
+#' @examples
+#' whapi_date_diff_days(Sys.Date() - 10, Sys.Date())
+#' #> 10
+#' @export
+whapi_date_diff_days <- function(start, end) {
+  if (is.na(start)) return(NA_integer_)
+  as.integer(as.Date(end) - as.Date(start))
+}
+
+#' Safe date formatting
+#'
+#' @description
+#' Formats a date safely, returning a fallback value (`na`) when the input
+#' is `NULL` or `NA`.
+#'
+#' @param x Date or coercible to `Date`.
+#' @param fmt Date format passed to [base::format()].
+#' @param na Fallback string if the input is missing.
+#'
+#' @return A formatted date string, or the `na` placeholder if missing.
+#' @examples
+#' whapi_fmt_date(Sys.Date())
+#' #> "31/08/2025"
+#' whapi_fmt_date(NA)
+#' #> "—"
+#' @export
+whapi_fmt_date <- function(x, fmt = "%d/%m/%Y", na = "—") {
+  if (is.null(x) || is.na(x)) return(na)
+  format(as.Date(x), fmt)
 }

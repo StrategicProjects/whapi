@@ -40,8 +40,8 @@ A tibble with \code{id}, \code{to}, \code{status}, \code{timestamp}, and the raw
 }
 \description{
 Sends an interactive \strong{LIST} message via Whapi.
-Sections/rows are validated by \code{\link[=validate_list_sections]{validate_list_sections()}}. The payload
-reuses \code{\link[=common_blocks]{common_blocks()}} to keep structure consistent across interactive
+Sections/rows are validated by \code{\link[=whapi_validate_list_sections]{whapi_validate_list_sections()}}. The payload
+reuses \code{\link[=whapi_common_blocks]{whapi_common_blocks()}} to keep structure consistent across interactive
 message types.
 }
 \examples{
@@ -73,6 +73,6 @@ message types.
 
 }
 \seealso{
-\code{\link[=validate_list_sections]{validate_list_sections()}}, \code{\link[=common_blocks]{common_blocks()}},
-\code{\link[=perform_request]{perform_request()}}, \code{\link[=extract_common_fields]{extract_common_fields()}}
+\code{\link[=whapi_validate_list_sections]{whapi_validate_list_sections()}}, \code{\link[=whapi_common_blocks]{whapi_common_blocks()}},
+\code{\link[=whapi_perform_request]{whapi_perform_request()}}, \code{\link[=whapi_extract_common_fields]{whapi_extract_common_fields()}}
 }

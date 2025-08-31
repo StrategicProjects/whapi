@@ -35,7 +35,7 @@ A tibble with fields \code{id}, \code{to}, \code{status}, \code{timestamp}, and 
 }
 \description{
 Sends an interactive message of type \strong{QUICK REPLY} via Whapi.
-Each button is normalized/validated by \code{\link[=coerce_buttons_quick]{coerce_buttons_quick()}} and
+Each button is normalized/validated by \code{\link[=whapi_coerce_buttons_quick]{whapi_coerce_buttons_quick()}} and
 automatically gets a unique slugified \code{id} if missing.
 }
 \examples{
@@ -48,5 +48,5 @@ automatically gets a unique slugified \code{id} if missing.
 
 }
 \seealso{
-\code{\link[=coerce_buttons_quick]{coerce_buttons_quick()}}, \code{\link[=common_blocks]{common_blocks()}}, \code{\link[=perform_request]{perform_request()}}
+\code{\link[=whapi_coerce_buttons_quick]{whapi_coerce_buttons_quick()}}, \code{\link[=whapi_common_blocks]{whapi_common_blocks()}}, \code{\link[=whapi_perform_request]{whapi_perform_request()}}
 }

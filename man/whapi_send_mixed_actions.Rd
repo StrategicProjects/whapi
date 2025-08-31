@@ -44,7 +44,7 @@ in \code{resp}.
 \description{
 Sends an interactive \strong{buttons} message that mixes \code{url}, \code{call}, and/or
 \code{copy} actions. Input buttons are normalized/validated by
-\code{\link[=coerce_buttons_mixed]{coerce_buttons_mixed()}} (aliases mapped to \code{title}, auto \code{id} creation,
+\code{\link[=whapi_coerce_buttons_mixed]{whapi_coerce_buttons_mixed()}} (aliases mapped to \code{title}, auto \code{id} creation,
 required fields per type).
 }
 \examples{
@@ -61,5 +61,5 @@ required fields per type).
 
 }
 \seealso{
-\code{\link[=coerce_buttons_mixed]{coerce_buttons_mixed()}}, \code{\link[=common_blocks]{common_blocks()}}, \code{\link[=perform_request]{perform_request()}}
+\code{\link[=whapi_coerce_buttons_mixed]{whapi_coerce_buttons_mixed()}}, \code{\link[=whapi_common_blocks]{whapi_common_blocks()}}, \code{\link[=whapi_perform_request]{whapi_perform_request()}}
 }

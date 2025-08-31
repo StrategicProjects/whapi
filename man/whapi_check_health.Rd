@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{whapi_check_health}
 \alias{whapi_check_health}
-\title{Check Whapi.Cloud health and channel status}
+\title{Check Whapi.Cloud channel health and status}
 \usage{
 whapi_check_health(
   wakeup = TRUE,
