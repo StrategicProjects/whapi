@@ -7,7 +7,7 @@ quoted context (headers, body, sections/buttons as JSON)."><meta property="og:de
 tibble with a stable schema.
 It extracts common metadata (ids, chat, author, timestamps, source), plain text
 content, action edits/reactions, and interactive replies along with the
-quoted context (headers, body, sections/buttons as JSON)."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+quoted context (headers, body, sections/buttons as JSON)."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -15,7 +15,7 @@ quoted context (headers, body, sections/buttons as JSON)."><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@ quoted context (headers, body, sections/buttons as JSON)."><meta property="og:im
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Parse Whapi "messages" array into a normalized tibble</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Parse Whapi "messages" array into a normalized tibble</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/webhook.R" class="external-link"><code>R/webhook.R</code></a></small>
       <div class="d-none name"><code>whapi_parse_messages.Rd</code></div>
     </div>
@@ -90,8 +90,8 @@ Accepts <code>NULL</code>, a single message, or an array of messages.</p></dd>
 
 <ul><li><p>Handles multiple shapes and normalizes to a list of messages via a helper
 <code>whapi_as_array(lst, "message")</code>.</p></li>
-<li><p>Reply types supported:</p><ul><li><p><code>reply$type == "list_reply"</code> → uses <code>reply$list_reply$id/title/description</code></p></li>
-<li><p><code>reply$type == "buttons_reply"</code> (or <code>"button_reply"</code>) → uses
+<li><p>Reply types supported:</p><ul><li><p><code>reply$type == "list_reply"</code> -&gt; uses <code>reply$list_reply$id/title/description</code></p></li>
+<li><p><code>reply$type == "buttons_reply"</code> (or <code>"button_reply"</code>) -&gt; uses
 <code>reply$buttons_reply$id/title</code> (or <code>reply$button_reply</code>)</p></li>
 <li><p>Fallback: <code>reply$id/title/description/body</code> when available</p></li>
 </ul></li>

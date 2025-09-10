@@ -3,7 +3,7 @@
 #' @description
 #' Helper function to shorten long strings when printing to logs.
 #' If the input string exceeds `max` characters, it is truncated and
-#' suffixed with `"… (truncated)"`.
+#' suffixed with `"... (truncated)"`.
 #'
 #' @param x A character string (or coercible to character).
 #' @param max Integer. Maximum number of characters to display (default: 2000).
@@ -17,7 +17,7 @@
 whapi_trunc <- function(x, max = 2000L) {
   if (is.null(x)) return(NULL)
   s <- as.character(x)
-  if (nchar(s) > max) paste0(substr(s, 1, max), "… (truncated)") else s
+  if (nchar(s) > max) paste0(substr(s, 1, max), "... (truncated)") else s
 }
 
 #' Redact sensitive values in headers/cookies
@@ -273,7 +273,8 @@ whapi_parse_body <- function(req) {
 #' # Print only metadata, no headers/body
 #' whapi_log_plumber_req(req, show_headers = FALSE, show_body = FALSE)
 #' }
-#'
+#' @importFrom stats setNames
+#' @importFrom utils str
 #' @seealso [cli::cli_inform()], [cli::cli_rule()], [cli::cli_verbatim()]
 #' @export
 whapi_log_plumber_req <- function(req,
@@ -377,8 +378,8 @@ whapi_log_plumber_req <- function(req,
 #' - Handles multiple shapes and normalizes to a list of messages via a helper
 #'   `whapi_as_array(lst, "message")`.
 #' - Reply types supported:
-#'   - `reply$type == "list_reply"` → uses `reply$list_reply$id/title/description`
-#'   - `reply$type == "buttons_reply"` (or `"button_reply"`) → uses
+#'   - `reply$type == "list_reply"` -> uses `reply$list_reply$id/title/description`
+#'   - `reply$type == "buttons_reply"` (or `"button_reply"`) -> uses
 #'     `reply$buttons_reply$id/title` (or `reply$button_reply`)
 #'   - Fallback: `reply$id/title/description/body` when available
 #' - Context of the quoted message is captured in:
@@ -630,7 +631,7 @@ whapi_flatten_webhook <- function(payload, verbose = TRUE) {
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Parsing Whapi webhook payload…",
+      "i" = "Parsing Whapi webhook payload...",
       ">" = paste0("Top-level keys: ", paste(names(payload %||% list()), collapse = ", "))
     ))
   }
@@ -707,8 +708,8 @@ whapi_flatten_webhook <- function(payload, verbose = TRUE) {
 #' @seealso [stringr::str_extract()], [stringr::str_split()]
 #' @export
 whapi_parse_command <- function(text, collapse_args = TRUE) {
-  parts <- stringr::str_extract(text, "/.*") %>%
-    stringr::str_split("\\s+") %>%
+  parts <- stringr::str_extract(text, "/.*") |>
+    stringr::str_split("\\s+") |>
     unlist()
 
   if (collapse_args)

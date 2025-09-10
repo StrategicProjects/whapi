@@ -11,7 +11,7 @@ whapi_normalize_to(to)
 text format or JIDs.}
 }
 \value{
-A character vector of normalized IDs (phones → digits only, JIDs kept as-is).
+A character vector of normalized IDs (phones -> digits only, JIDs kept as-is).
 }
 \description{
 Cleans and normalizes WhatsApp phone numbers by:

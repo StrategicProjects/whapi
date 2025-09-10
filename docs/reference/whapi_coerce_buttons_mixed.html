@@ -4,9 +4,9 @@ messages. It first normalizes input via whapi_coerce_buttons_base() (accepts
 data.frame/tibble or list, maps aliases to title, auto-creates id
 with slug + uniqueness) and then validates each button according to its
 declared type:
-url  → requires fields: title, id, url
-call → requires fields: title, id, phone_number
-copy → requires fields: title, id, copy_code
+url  -&amp;gt; requires fields: title, id, url
+call -&amp;gt; requires fields: title, id, phone_number
+copy -&amp;gt; requires fields: title, id, copy_code
 
 
 Enforces WhatsApp constraints: 1 to 3 buttons per message."><meta property="og:description" content="Internal helper that prepares mixed action buttons for Whapi interactive
@@ -14,12 +14,12 @@ messages. It first normalizes input via whapi_coerce_buttons_base() (accepts
 data.frame/tibble or list, maps aliases to title, auto-creates id
 with slug + uniqueness) and then validates each button according to its
 declared type:
-url  → requires fields: title, id, url
-call → requires fields: title, id, phone_number
-copy → requires fields: title, id, copy_code
+url  -&amp;gt; requires fields: title, id, url
+call -&amp;gt; requires fields: title, id, phone_number
+copy -&amp;gt; requires fields: title, id, copy_code
 
 
-Enforces WhatsApp constraints: 1 to 3 buttons per message."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+Enforces WhatsApp constraints: 1 to 3 buttons per message."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -27,7 +27,7 @@ Enforces WhatsApp constraints: 1 to 3 buttons per message."><meta property="og:i
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@ Enforces WhatsApp constraints: 1 to 3 buttons per message."><meta property="og:i
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Coerce and validate MIXED buttons (url / call / copy) for Whapi</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Coerce and validate MIXED buttons (url / call / copy) for Whapi</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_coerce_buttons_mixed.Rd</code></div>
     </div>
@@ -57,9 +57,9 @@ Enforces WhatsApp constraints: 1 to 3 buttons per message."><meta property="og:i
 messages. It first normalizes input via <code><a href="whapi_coerce_buttons_base.html">whapi_coerce_buttons_base()</a></code> (accepts
 <code>data.frame</code>/<code>tibble</code> or <code>list</code>, maps aliases to <code>title</code>, auto-creates <code>id</code>
 with slug + uniqueness) and then validates each button according to its
-declared <code>type</code>:</p><ul><li><p><code>url</code>  → requires fields: <code>title</code>, <code>id</code>, <code>url</code></p></li>
-<li><p><code>call</code> → requires fields: <code>title</code>, <code>id</code>, <code>phone_number</code></p></li>
-<li><p><code>copy</code> → requires fields: <code>title</code>, <code>id</code>, <code>copy_code</code></p></li>
+declared <code>type</code>:</p><ul><li><p><code>url</code>  -&gt; requires fields: <code>title</code>, <code>id</code>, <code>url</code></p></li>
+<li><p><code>call</code> -&gt; requires fields: <code>title</code>, <code>id</code>, <code>phone_number</code></p></li>
+<li><p><code>copy</code> -&gt; requires fields: <code>title</code>, <code>id</code>, <code>copy_code</code></p></li>
 </ul><p>Enforces WhatsApp constraints: <strong>1 to 3</strong> buttons per message.</p>
     </div>
 

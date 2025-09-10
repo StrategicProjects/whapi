@@ -5,7 +5,7 @@ reuses whapi_common_blocks() to keep structure consistent across interactive
 message types."><meta property="og:description" content="Sends an interactive LIST message via Whapi.
 Sections/rows are validated by whapi_validate_list_sections(). The payload
 reuses whapi_common_blocks() to keep structure consistent across interactive
-message types."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+message types."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -13,7 +13,7 @@ message types."><meta property="og:image" content="https://monitoramento.sepe.pe
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@ message types."><meta property="og:image" content="https://monitoramento.sepe.pe
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Send a WhatsApp interactive LIST message (Whapi.Cloud)</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Send a WhatsApp interactive LIST message (Whapi.Cloud)</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_send_list.Rd</code></div>
     </div>
@@ -51,7 +51,7 @@ message types.</p>
 <span>  <span class="va">to</span>,</span>
 <span>  <span class="va">body_text</span>,</span>
 <span>  <span class="va">list_sections</span>,</span>
-<span>  list_label <span class="op">=</span> <span class="st">"Choose…"</span>,</span>
+<span>  list_label <span class="op">=</span> <span class="st">"Choose..."</span>,</span>
 <span>  header_text <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  footer_text <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  token <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"WHAPI_TOKEN"</span>, unset <span class="op">=</span> <span class="st">""</span><span class="op">)</span>,</span>
@@ -79,7 +79,7 @@ message types.</p>
 
 <dt id="arg-list-label">list_label<a class="anchor" aria-label="anchor" href="#arg-list-label"></a></dt>
 <dd><p>Character(1), optional. Button label that opens the list.
-Default: <code>"Choose…"</code></p></dd>
+Default: <code>"Choose..."</code></p></dd>
 
 
 <dt id="arg-header-text-footer-text">header_text, footer_text<a class="anchor" aria-label="anchor" href="#arg-header-text-footer-text"></a></dt>
@@ -110,32 +110,33 @@ Default: <code>"Choose…"</code></p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
-<span class="r-in"><span><span class="co"># sections &lt;- list(</span></span></span>
-<span class="r-in"><span><span class="co">#   list(</span></span></span>
-<span class="r-in"><span><span class="co">#     title = "Burgers",</span></span></span>
-<span class="r-in"><span><span class="co">#     rows = list(</span></span></span>
-<span class="r-in"><span><span class="co">#       list(id="b1", title="Plain",  description="No cheese, no sauce"),</span></span></span>
-<span class="r-in"><span><span class="co">#       list(id="b2", title="Cheese", description="With melted cheese")</span></span></span>
-<span class="r-in"><span><span class="co">#     )</span></span></span>
-<span class="r-in"><span><span class="co">#   ),</span></span></span>
-<span class="r-in"><span><span class="co">#   list(</span></span></span>
-<span class="r-in"><span><span class="co">#     title = "Drinks",</span></span></span>
-<span class="r-in"><span><span class="co">#     rows = list(</span></span></span>
-<span class="r-in"><span><span class="co">#       list(id="d1", title="Water"),</span></span></span>
-<span class="r-in"><span><span class="co">#       list(id="d2", title="Soda", description="Assorted flavors")</span></span></span>
-<span class="r-in"><span><span class="co">#     )</span></span></span>
-<span class="r-in"><span><span class="co">#   )</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># whapi_send_list(</span></span></span>
-<span class="r-in"><span><span class="co">#   to = "5581999999999",</span></span></span>
-<span class="r-in"><span><span class="co">#   body_text = "Choose your order:",</span></span></span>
-<span class="r-in"><span><span class="co">#   list_sections = sections,</span></span></span>
-<span class="r-in"><span><span class="co">#   list_label = "Open menu",</span></span></span>
-<span class="r-in"><span><span class="co">#   header_text = "Our Menu",</span></span></span>
-<span class="r-in"><span><span class="co">#   footer_text = "Thanks!"</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>WHAPI_TOKEN <span class="op">=</span> <span class="st">"your_token_here"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="va">sections</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>     title <span class="op">=</span> <span class="st">"Burgers"</span>,</span></span>
+<span class="r-in"><span>     rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>       <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"b1"</span>, title<span class="op">=</span><span class="st">"Plain"</span>,  description<span class="op">=</span><span class="st">"No cheese, no sauce"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>       <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"b2"</span>, title<span class="op">=</span><span class="st">"Cheese"</span>, description<span class="op">=</span><span class="st">"With melted cheese"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>     <span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="op">)</span>,</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>     title <span class="op">=</span> <span class="st">"Drinks"</span>,</span></span>
+<span class="r-in"><span>     rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>       <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"d1"</span>, title<span class="op">=</span><span class="st">"Water"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>       <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"d2"</span>, title<span class="op">=</span><span class="st">"Soda"</span>, description<span class="op">=</span><span class="st">"Assorted flavors"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>     <span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu">whapi_send_list</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   to <span class="op">=</span> <span class="st">"5581999999999"</span>,</span></span>
+<span class="r-in"><span>   body_text <span class="op">=</span> <span class="st">"Choose your order:"</span>,</span></span>
+<span class="r-in"><span>   list_sections <span class="op">=</span> <span class="va">sections</span>,</span></span>
+<span class="r-in"><span>   list_label <span class="op">=</span> <span class="st">"Open menu"</span>,</span></span>
+<span class="r-in"><span>   header_text <span class="op">=</span> <span class="st">"Our Menu"</span>,</span></span>
+<span class="r-in"><span>   footer_text <span class="op">=</span> <span class="st">"Thanks!"</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

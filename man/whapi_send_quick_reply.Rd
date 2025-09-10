@@ -39,13 +39,14 @@ Each button is normalized/validated by \code{\link[=whapi_coerce_buttons_quick]{
 automatically gets a unique slugified \code{id} if missing.
 }
 \examples{
+\dontrun{
 # Sys.setenv(WHAPI_TOKEN = "your_token_here")
 # whapi_send_quick_reply(
 #   to = "5581999999999",
 #   body_text = "Do you confirm?",
 #   buttons = tibble::tribble(~title, "YES", "NO")
 # )
-
+}
 }
 \seealso{
 \code{\link[=whapi_coerce_buttons_quick]{whapi_coerce_buttons_quick()}}, \code{\link[=whapi_common_blocks]{whapi_common_blocks()}}, \code{\link[=whapi_perform_request]{whapi_perform_request()}}

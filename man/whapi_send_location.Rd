@@ -40,12 +40,13 @@ Sends a location message using Whapi's \code{POST /messages/location}.
 Supports optional \code{name} (short title) and \code{address} (human-readable).
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# whapi_send_location("5581999999999",
-#   latitude = -8.063169, longitude = -34.871139,
-#   name = "Marco Zero", address = "Recife, PE")
+\dontrun{
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ whapi_send_location("5581999999999",
+   latitude = -8.063169, longitude = -34.871139,
+   name = "Marco Zero", address = "Recife, PE")
 
 # Group id example
-# whapi_send_location("1203630xxxxxxxx@g.us", -8.045, -34.91)
-
+ whapi_send_location("1203630xxxxxxxx@g.us", -8.045, -34.91)
+}
 }

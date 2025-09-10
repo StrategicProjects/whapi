@@ -48,17 +48,18 @@ Sends an interactive \strong{buttons} message that mixes \code{url}, \code{call}
 required fields per type).
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# whapi_send_mixed_actions(
-#   to = "5581999999999",
-#   body_text = "Pick an option:",
-#   buttons = list(
-#     list(type="url",  title="Website",   url="https://example.com"),
-#     list(type="call", title="Call us",   phone_number="5581999999999"),
-#     list(type="copy", title="Copy OTP",  copy_code="123456")
-#   )
-# )
-
+\dontrun{
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ whapi_send_mixed_actions(
+   to = "5581999999999",
+   body_text = "Pick an option:",
+   buttons = list(
+     list(type="url",  title="Website",   url="https://example.com"),
+     list(type="call", title="Call us",   phone_number="5581999999999"),
+     list(type="copy", title="Copy OTP",  copy_code="123456")
+   )
+ )
+}
 }
 \seealso{
 \code{\link[=whapi_coerce_buttons_mixed]{whapi_coerce_buttons_mixed()}}, \code{\link[=whapi_common_blocks]{whapi_common_blocks()}}, \code{\link[=whapi_perform_request]{whapi_perform_request()}}

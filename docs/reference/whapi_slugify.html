@@ -5,7 +5,7 @@ Ensures that IDs contain only lowercase letters, digits, and underscores,
 and are never empty (defaults to "btn" if the input is blank).'><meta property="og:description" content='Converts free-text labels into a safe "slug" format suitable for use as
 message button IDs or other identifiers in Whapi API requests.
 Ensures that IDs contain only lowercase letters, digits, and underscores,
-and are never empty (defaults to "btn" if the input is blank).'><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+and are never empty (defaults to "btn" if the input is blank).'><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -13,7 +13,7 @@ and are never empty (defaults to "btn" if the input is blank).'><meta property="
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@ and are never empty (defaults to "btn" if the input is blank).'><meta property="
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>whapi_slugify strings for safe IDs (e.g., button IDs in Whapi)</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>whapi_slugify strings for safe IDs (e.g., button IDs in Whapi)</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_slugify.Rd</code></div>
     </div>
@@ -81,16 +81,19 @@ interactive message helpers.</p></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">whapi_slugify</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Yes!"</span>, <span class="st">"Call Us"</span>, <span class="st">"Promoção Rápida"</span>, <span class="st">"###"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "yes"            "call_us"        "promo_o_r_pida" "btn"           </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">whapi_slugify</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Yes!"</span>, <span class="st">"Call Us"</span>, <span class="st">"Sale!"</span>, <span class="st">"###"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "yes"     "call_us" "sale"    "btn"    </span>
 <span class="r-in"><span><span class="co"># -&gt; "yes", "call_us", "promocao_rapida", "btn"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use case in button creation:</span></span></span>
 <span class="r-in"><span><span class="va">titles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Buy Now"</span>, <span class="st">"Learn More"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu">.whapi_slugify</span><span class="op">(</span><span class="va">titles</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .whapi_slugify(titles):</span> could not find function ".whapi_slugify"</span>
+<span class="r-in"><span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu">whapi_slugify</span><span class="op">(</span><span class="va">titles</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>title <span class="op">=</span> <span class="va">titles</span>, id <span class="op">=</span> <span class="va">ids</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'ids' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   title      id        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Buy Now    buy_now   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Learn More learn_more</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

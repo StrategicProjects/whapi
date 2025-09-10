@@ -26,9 +26,9 @@ whapi_send_document(
 
 \item{filename}{Optional filename shown to the user. If omitted:
 \itemize{
-\item \code{type="file"}   → uses \code{basename(document)};
-\item \code{type="url"}    → uses the URL basename (without query/fragment);
-\item \code{type="base64"} → tries the \verb{name=} part inside the data URI.
+\item \code{type="file"}   -> uses \code{basename(document)};
+\item \code{type="url"}    -> uses the URL basename (without query/fragment);
+\item \code{type="base64"} -> tries the \verb{name=} part inside the data URI.
 }}
 
 \item{token}{Bearer token (defaults to env var \code{WHAPI_TOKEN}).}
@@ -44,18 +44,20 @@ A tibble with \code{id}, \code{to}, \code{status}, \code{timestamp}, \code{times
 Sends a document using Whapi's \code{POST /messages/document}.
 Supports three input modes via \code{type}:
 \itemize{
-\item \code{"file"}   : local path → reads bytes and builds a data URI
+\item \code{"file"}   : local path -> reads bytes and builds a data URI
 (\verb{data:<mime>;name=<file>;base64,<...>});
 \item \code{"url"}    : direct \code{http(s)} URL;
 \item \code{"base64"} : pre-built data URI (\verb{data:application/...;name=...;base64,...}).
 }
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# whapi_send_document("5581999999999", "report.pdf", type="file", caption="Monthly report")
-# whapi_send_document("5581999999999", "https://example.com/contract.docx", type="url")
-# b <- openssl::base64_encode(readBin("memo.odt","raw",file.info("memo.odt")$size))
-# du <- sprintf("data:application/vnd.oasis.opendocument.text;name=\%s;base64,\%s", basename("memo.odt"), b)
-# whapi_send_document("5581999999999", du, type="base64")
-
+\dontrun{
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ whapi_send_document("5581999999999", "report.pdf", type="file", caption="Monthly report")
+ whapi_send_document("5581999999999", "https://example.com/contract.docx", type="url")
+ b <- openssl::base64_encode(readBin("memo.odt","raw",file.info("memo.odt")$size))
+ du <- sprintf("data:application/vnd.oasis.opendocument.text;name=\%s;base64,\%s",
+  basename("memo.odt"), b)
+ whapi_send_document("5581999999999", du, type="base64")
+}
 }

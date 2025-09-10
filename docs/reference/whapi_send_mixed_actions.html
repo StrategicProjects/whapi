@@ -5,7 +5,7 @@ whapi_coerce_buttons_mixed() (aliases mapped to title, auto id creation,
 required fields per type)."><meta property="og:description" content="Sends an interactive buttons message that mixes url, call, and/or
 copy actions. Input buttons are normalized/validated by
 whapi_coerce_buttons_mixed() (aliases mapped to title, auto id creation,
-required fields per type)."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+required fields per type)."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -13,7 +13,7 @@ required fields per type)."><meta property="og:image" content="https://monitoram
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@ required fields per type)."><meta property="og:image" content="https://monitoram
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Send a WhatsApp interactive message mixing URL/CALL/COPY buttons (Whapi.Cloud)</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Send a WhatsApp interactive message mixing URL/CALL/COPY buttons (Whapi.Cloud)</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_send_mixed_actions.Rd</code></div>
     </div>
@@ -108,17 +108,18 @@ in <code>resp</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
-<span class="r-in"><span><span class="co"># whapi_send_mixed_actions(</span></span></span>
-<span class="r-in"><span><span class="co">#   to = "5581999999999",</span></span></span>
-<span class="r-in"><span><span class="co">#   body_text = "Pick an option:",</span></span></span>
-<span class="r-in"><span><span class="co">#   buttons = list(</span></span></span>
-<span class="r-in"><span><span class="co">#     list(type="url",  title="Website",   url="https://example.com"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(type="call", title="Call us",   phone_number="5581999999999"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(type="copy", title="Copy OTP",  copy_code="123456")</span></span></span>
-<span class="r-in"><span><span class="co">#   )</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>WHAPI_TOKEN <span class="op">=</span> <span class="st">"your_token_here"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu">whapi_send_mixed_actions</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   to <span class="op">=</span> <span class="st">"5581999999999"</span>,</span></span>
+<span class="r-in"><span>   body_text <span class="op">=</span> <span class="st">"Pick an option:"</span>,</span></span>
+<span class="r-in"><span>   buttons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"url"</span>,  title<span class="op">=</span><span class="st">"Website"</span>,   url<span class="op">=</span><span class="st">"https://example.com"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"call"</span>, title<span class="op">=</span><span class="st">"Call us"</span>,   phone_number<span class="op">=</span><span class="st">"5581999999999"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"copy"</span>, title<span class="op">=</span><span class="st">"Copy OTP"</span>,  copy_code<span class="op">=</span><span class="st">"123456"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -3,7 +3,7 @@
 PUT /messages/{MessageID}/reaction.
 The endpoint returns only { "success": true | false }.'><meta property="og:description" content='Sends (or removes) an emoji reaction to a message via
 PUT /messages/{MessageID}/reaction.
-The endpoint returns only { "success": true | false }.'><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+The endpoint returns only { "success": true | false }.'><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -11,7 +11,7 @@ The endpoint returns only { "success": true | false }.'><meta property="og:image
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@ The endpoint returns only { "success": true | false }.'><meta property="og:image
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>React to a WhatsApp message (Whapi.Cloud)</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>React to a WhatsApp message (Whapi.Cloud)</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_react_to_message.Rd</code></div>
     </div>
@@ -62,7 +62,7 @@ The endpoint returns only <code>{ "success": true | false }</code>.</p>
 
 
 <dt id="arg-emoji">emoji<a class="anchor" aria-label="anchor" href="#arg-emoji"></a></dt>
-<dd><p>Character(1). Emoji to react with (e.g., "👍", "❤️").
+<dd><p>Character(1). Emoji to react with.
 To remove a reaction, pass an empty string <code>""</code>.</p></dd>
 
 
@@ -80,23 +80,16 @@ To remove a reaction, pass an empty string <code>""</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble with columns:</p><ul><li><p><code>id</code>        — message_id reacted to</p></li>
-<li><p><code>emoji</code>     — emoji used (or <code>""</code> if removed)</p></li>
-<li><p><code>status</code>    — <code>"ok"</code> if success, <code>"error"</code> otherwise</p></li>
-<li><p><code>success</code>   — logical flag from API</p></li>
-<li><p><code>resp</code>      — raw response (list)</p></li>
+    <p>A tibble with columns:</p><ul><li><p><code>id</code>        - message_id reacted to</p></li>
+<li><p><code>emoji</code>     - emoji used (or <code>""</code> if removed)</p></li>
+<li><p><code>status</code>    - <code>"ok"</code> if success, <code>"error"</code> otherwise</p></li>
+<li><p><code>success</code>   - logical flag from API</p></li>
+<li><p><code>resp</code>      - raw response (list)</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
-<span class="r-in"><span><span class="co"># Add a reaction:</span></span></span>
-<span class="r-in"><span><span class="co"># whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "❤️")</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co"># Remove a reaction:</span></span></span>
-<span class="r-in"><span><span class="co"># whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")</span></span></span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
+
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

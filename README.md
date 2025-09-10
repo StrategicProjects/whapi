@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# whapi <a href="https://github.com/StrategicProjects/whapi"><img src="man/figures/logo.png" align="right" height="106" alt="whapi website" /></a>
+# whapi <a href="https://monitoramento.sepe.pe.gov.br/whapi/"><img src="man/figures/logo.png" align="right" height="107" alt="whapi website" /></a>
 
 <!-- badges: start -->
 
 ![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/whapi) 
 ![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/whapi) 
 ![License](https://img.shields.io/badge/license-MIT-darkviolet.svg) 
-![](https://img.shields.io/badge/devel%20version-0.0.96-orangered.svg)
+![](https://img.shields.io/badge/devel%20version-0.0.1-orangered.svg)
 
 <!-- badges: end -->
 

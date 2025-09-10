@@ -26,9 +26,9 @@ messages. It first normalizes input via \code{\link[=whapi_coerce_buttons_base]{
 with slug + uniqueness) and then validates each button according to its
 declared \code{type}:
 \itemize{
-\item \code{url}  → requires fields: \code{title}, \code{id}, \code{url}
-\item \code{call} → requires fields: \code{title}, \code{id}, \code{phone_number}
-\item \code{copy} → requires fields: \code{title}, \code{id}, \code{copy_code}
+\item \code{url}  -> requires fields: \code{title}, \code{id}, \code{url}
+\item \code{call} -> requires fields: \code{title}, \code{id}, \code{phone_number}
+\item \code{copy} -> requires fields: \code{title}, \code{id}, \code{copy_code}
 }
 
 Enforces WhatsApp constraints: \strong{1 to 3} buttons per message.

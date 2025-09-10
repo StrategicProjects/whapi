@@ -12,30 +12,31 @@ whapi_mark_message_read(
 )
 }
 \arguments{
-\item{message_id}{Character(1). ID da mensagem (WAMID) a marcar como lida.}
+\item{message_id}{Character(1). Message ID (WAMID) to be marked as read.}
 
-\item{token}{Character(1). Bearer token. Padrão: \code{Sys.getenv("WHAPI_TOKEN")}.}
+\item{token}{Character(1). Bearer token. Default: \code{Sys.getenv("WHAPI_TOKEN")}.}
 
-\item{timeout}{Numeric(1). Tempo limite (s). Padrão: 30.}
+\item{timeout}{Numeric(1). Timeout (s). Default: 30.}
 
-\item{verbose}{Logical(1). Exibir logs via \pkg{cli}? Padrão: \code{TRUE}.}
+\item{verbose}{Logical(1). Show logs via \pkg{cli}? Default: \code{TRUE}.}
 }
 \value{
-Tibble com colunas:
+A tibble with the following columns:
 \itemize{
-\item \code{id}        — o \code{message_id} informado;
-\item \code{status}    — \code{"read"} quando \code{success=TRUE}, \code{"error"} caso contrário;
-\item \code{success}   — lógico vindo do endpoint;
-\item \code{resp}      — resposta crua (lista).
+\item \code{id}        - the provided \code{message_id};
+\item \code{status}    - \code{"read"} when \code{success=TRUE}, \code{"error"} otherwise;
+\item \code{success}   - logical value returned by the endpoint;
+\item \code{resp}      - raw response (list).
 }
 }
 \description{
-Marca uma mensagem como \strong{lida} usando \code{PUT /messages/{MessageID}}.
-Este endpoint retorna somente um ACK minimalista no corpo:
+Marks a message as \strong{read} using \code{PUT /messages/{MessageID}}.
+This endpoint returns only a minimalistic ACK in the body:
 \code{{"success": true | false}}.
 }
 \examples{
+\dontrun{
 # Sys.setenv(WHAPI_TOKEN = "your_token_here")
 # whapi_mark_message_read("PsqXn5SAD5v7HRA-wHqB9tMeGQ")
-
+}
 }

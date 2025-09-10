@@ -3,7 +3,7 @@
 Falls back to utils::str() output if jsonlite is not available
 or if JSON conversion fails. Long outputs are truncated with whapi_trunc."><meta property="og:description" content="Converts R objects to a JSON string for easier inspection in logs.
 Falls back to utils::str() output if jsonlite is not available
-or if JSON conversion fails. Long outputs are truncated with whapi_trunc."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+or if JSON conversion fails. Long outputs are truncated with whapi_trunc."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -11,7 +11,7 @@ or if JSON conversion fails. Long outputs are truncated with whapi_trunc."><meta
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@ or if JSON conversion fails. Long outputs are truncated with whapi_trunc."><meta
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Convert R objects to pretty JSON for logging</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Convert R objects to pretty JSON for logging</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/webhook.R" class="external-link"><code>R/webhook.R</code></a></small>
       <div class="d-none name"><code>whapi_log_pretty_json.Rd</code></div>
     </div>
@@ -69,7 +69,7 @@ or if JSON conversion fails. Long outputs are truncated with <a href="whapi_trun
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">whapi_log_pretty_json</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "{\n  \"a\": 1,\n  \"b\": \"test\"\n}"</span>
 <span class="r-in"><span><span class="fu">whapi_log_pretty_json</span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span>, max <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "[\n  {\n    \"mpg\": 21,\n    \"cyl\": 6,\n    \"disp\": 160,\n    \"hp\": 110,\n    \"drat\": 3.9,\n    \"wt\": 2.62,\n… (truncated)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "[\n  {\n    \"mpg\": 21,\n    \"cyl\": 6,\n    \"disp\": 160,\n    \"hp\": 110,\n    \"drat\": 3.9,\n    \"wt\": 2.62,\n... (truncated)"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

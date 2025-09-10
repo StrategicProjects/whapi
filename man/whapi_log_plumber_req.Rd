@@ -59,7 +59,6 @@ function(req, res) {
 # Print only metadata, no headers/body
 whapi_log_plumber_req(req, show_headers = FALSE, show_body = FALSE)
 }
-
 }
 \seealso{
 \code{\link[cli:cli_abort]{cli::cli_inform()}}, \code{\link[cli:cli_rule]{cli::cli_rule()}}, \code{\link[cli:cli_verbatim]{cli::cli_verbatim()}}

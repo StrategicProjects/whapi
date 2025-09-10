@@ -4,7 +4,7 @@
 \alias{whapi_clip_text}
 \title{Clip long text with ellipsis}
 \usage{
-whapi_clip_text(x, width = 420, ellipsis = "…")
+whapi_clip_text(x, width = 420, ellipsis = "...")
 }
 \arguments{
 \item{x}{Character string to clip.}
@@ -18,9 +18,9 @@ A clipped string with ellipsis if needed.
 }
 \description{
 Shortens text to a maximum width (character length). If the text is longer,
-it is truncated and an ellipsis (default \code{"…"}) is appended.
+it is truncated and an ellipsis (default \code{"..."}) is appended.
 }
 \examples{
 whapi_clip_text("This is a very long sentence that should be clipped.", width = 20)
-#> "This is a very long…"
+#> "This is a very long..."
 }

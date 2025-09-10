@@ -33,12 +33,12 @@ Transformation steps:
 }
 }
 \examples{
-whapi_slugify(c("Yes!", "Call Us", "Promoção Rápida", "###"))
+whapi_slugify(c("Yes!", "Call Us", "Sale!", "###"))
 # -> "yes", "call_us", "promocao_rapida", "btn"
 
 # Use case in button creation:
 titles <- c("Buy Now", "Learn More")
-ids <- .whapi_slugify(titles)
+ids <- whapi_slugify(titles)
 tibble::tibble(title = titles, id = ids)
 
 }

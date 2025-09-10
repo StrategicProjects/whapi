@@ -15,7 +15,7 @@ whapi_react_to_message(
 \arguments{
 \item{message_id}{Character(1). Target message ID (WAMID).}
 
-\item{emoji}{Character(1). Emoji to react with (e.g., "👍", "❤️").
+\item{emoji}{Character(1). Emoji to react with.
 To remove a reaction, pass an empty string \code{""}.}
 
 \item{token}{Character(1). Bearer token. Defaults to env var \code{WHAPI_TOKEN}.}
@@ -27,11 +27,11 @@ To remove a reaction, pass an empty string \code{""}.}
 \value{
 A tibble with columns:
 \itemize{
-\item \code{id}        — message_id reacted to
-\item \code{emoji}     — emoji used (or \code{""} if removed)
-\item \code{status}    — \code{"ok"} if success, \code{"error"} otherwise
-\item \code{success}   — logical flag from API
-\item \code{resp}      — raw response (list)
+\item \code{id}        - message_id reacted to
+\item \code{emoji}     - emoji used (or \code{""} if removed)
+\item \code{status}    - \code{"ok"} if success, \code{"error"} otherwise
+\item \code{success}   - logical flag from API
+\item \code{resp}      - raw response (list)
 }
 }
 \description{
@@ -40,11 +40,12 @@ Sends (or removes) an \strong{emoji reaction} to a message via
 The endpoint returns only \code{{ "success": true | false }}.
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# Add a reaction:
-# whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "❤️")
-#
-# Remove a reaction:
-# whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")
+\dontrun{
+Sys.setenv(WHAPI_TOKEN = "your_token_here")
+Add a reaction:
+whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "<heart emoji>")
 
+# Remove a reaction:
+whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")
+}
 }

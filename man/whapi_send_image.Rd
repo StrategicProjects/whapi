@@ -37,17 +37,18 @@ A tibble with \code{id}, \code{to}, \code{status}, \code{timestamp}, \code{times
 Sends an image using Whapi's \code{POST /messages/image}.
 Supports three input modes through \code{type}:
 \itemize{
-\item \code{"file"}: local path → reads bytes and builds a \verb{data:<mime>;name=<file>;base64,<...>} URI
+\item \code{"file"}: local path -> reads bytes and builds a \verb{data:<mime>;name=<file>;base64,<...>} URI
 \item \code{"url"}: direct \code{http(s)} URL
 \item \code{"base64"}: pre-built data URI (\verb{data:image/...;base64,...})
 }
 }
 \examples{
+\dontrun{
 # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# whapi_send_image("5581999999999", image = "card.png", type = "file", caption = "Card")
-# whapi_send_image("5581999999999", image = "https://site.com/img.png", type = "url")
-# b64 <- openssl::base64_encode(readBin("card.png","raw",file.info("card.png")$size))
-# data_uri <- sprintf("data:image/png;name=\%s;base64,\%s", basename("card.png"), b64)
-# whapi_send_image("5581999999999", image = data_uri, type = "base64")
-
+ whapi_send_image("5581999999999", image = "card.png", type = "file", caption = "Card")
+ whapi_send_image("5581999999999", image = "https://site.com/img.png", type = "url")
+ b64 <- openssl::base64_encode(readBin("card.png","raw",file.info("card.png")$size))
+ data_uri <- sprintf("data:image/png;name=\%s;base64,\%s", basename("card.png"), b64)
+ whapi_send_image("5581999999999", image = data_uri, type = "base64")
+}
 }

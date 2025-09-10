@@ -18,6 +18,6 @@ applying a \code{latin-ascii} transliteration. Useful for normalization before
 matching or slug generation.
 }
 \examples{
-whapi_to_ascii_lower("São Paulo")
+whapi_to_ascii_lower("Sao Paulo")
 #> "sao paulo"
 }

@@ -39,8 +39,8 @@ content, action edits/reactions, and \strong{interactive replies} along with the
 \code{whapi_as_array(lst, "message")}.
 \item Reply types supported:
 \itemize{
-\item \code{reply$type == "list_reply"} → uses \code{reply$list_reply$id/title/description}
-\item \code{reply$type == "buttons_reply"} (or \code{"button_reply"}) → uses
+\item \code{reply$type == "list_reply"} -> uses \code{reply$list_reply$id/title/description}
+\item \code{reply$type == "buttons_reply"} (or \code{"button_reply"}) -> uses
 \code{reply$buttons_reply$id/title} (or \code{reply$button_reply})
 \item Fallback: \code{reply$id/title/description/body} when available
 }

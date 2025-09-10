@@ -1,13 +1,13 @@
 Package: whapi
 Title: R Client for 'whapi.cloud'
-Version: 0.0.1
-Date: 2025-08-30
+Version: 0.0.2
+Date: 2025-09-10
 Authors@R: c(
             person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
             person("Hugo", "Vaconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
             person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"))
 Description: Provides an R interface to the 'whapi.cloud' 'API', enabling 
-    sending and receiving WhatsApp messages directly from 'R'. 
+    sending and receiving 'WhatsApp' messages directly from 'R'. 
     Functions include sending text, images, documents, stickers, 
     geographic locations, and interactive messages (buttons and lists). 
     Also includes webhook parsing utilities and channel health checks.
@@ -22,6 +22,9 @@ Imports:
     tibble (>= 3.2.0),
     purrr (>= 1.0.0),
     stringr (>= 1.5.0),
+    stringi,
+    dplyr,
+    readr,
     lubridate (>= 1.9.0),
     jsonlite (>= 1.8.0),
     mime,

@@ -21,7 +21,7 @@ and \code{type = "quick_reply"}.
 \description{
 Internal helper that prepares \strong{quick reply} buttons for Whapi interactive
 messages. It relies on \code{\link[=whapi_coerce_buttons_base]{whapi_coerce_buttons_base()}} to normalize input
-(accept \code{data.frame}/\code{list}, map aliases \code{label}/\code{name} → \code{title},
+(accept \code{data.frame}/\code{list}, map aliases \code{label}/\code{name} -> \code{title},
 auto-generate \code{id} via slug + uniqueness) and then:
 \itemize{
 \item Enforces \code{type = "quick_reply"} for all buttons;

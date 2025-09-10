@@ -17,7 +17,7 @@ A character string, possibly truncated.
 \description{
 Helper function to shorten long strings when printing to logs.
 If the input string exceeds \code{max} characters, it is truncated and
-suffixed with \code{"… (truncated)"}.
+suffixed with \code{"... (truncated)"}.
 }
 \examples{
 whapi_trunc("short text", max = 10)

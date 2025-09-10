@@ -26,15 +26,15 @@ definitions into a normalized \strong{list-of-lists}, applying a few rules:
 \item Accepts aliases \code{label} / \code{name} and maps them to \code{title};
 \item Requires a non-empty \code{title};
 \item Auto-generates \code{id} when missing using slugification plus uniqueness
-enforcement (e.g., \verb{"Buy Now" → "buy_now"}, duplicates become
-\code{"buy_now_2"}, \code{"buy_now_3"}, …).
+enforcement (e.g., \code{"Buy Now" -> "buy_now"}, duplicates become
+\code{"buy_now_2"}, \code{"buy_now_3"}, ...).
 }
 
 This is useful before building payloads for Whapi interactive endpoints
 (e.g., buttons, mixed actions, etc.).
 }
 \examples{
-# From tibble (title only → ids auto-generated)
+# From tibble (title only -> ids auto-generated)
 # tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
 #   whapi_coerce_buttons_base()
 
@@ -46,5 +46,5 @@ This is useful before building payloads for Whapi interactive endpoints
 
 }
 \seealso{
-\code{.whapi_slugify()}, \code{whapi_make_unique()}
+\code{whapi_slugify()}, \code{whapi_make_unique()}
 }

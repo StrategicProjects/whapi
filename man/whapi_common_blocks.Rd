@@ -43,7 +43,9 @@ This helper ensures consistency and avoids repeating boilerplate code
 when building different interactive message payloads.
 }
 \examples{
+\dontrun{
 # Minimal body only
+
 whapi_common_blocks("5581999999999", body_text = "Choose an option below")
 
 # With header and footer
@@ -51,9 +53,9 @@ whapi_common_blocks(
   to = "5581999999999",
   body_text   = "Do you confirm?",
   header_text = "Booking Confirmation",
-  footer_text = "Reply now 👇"
+  footer_text = "Reply now"
 )
-
+}
 }
 \seealso{
 \code{\link[=whapi_send_quick_reply]{whapi_send_quick_reply()}}, \code{\link[=whapi_send_list]{whapi_send_list()}},

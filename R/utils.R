@@ -17,7 +17,7 @@
 #' @param to Character. A character vector of WhatsApp numbers in free
 #'   text format or JIDs.
 #'
-#' @return A character vector of normalized IDs (phones → digits only, JIDs kept as-is).
+#' @return A character vector of normalized IDs (phones -> digits only, JIDs kept as-is).
 #'
 #' @export
 whapi_normalize_to <- function(to) {
@@ -124,18 +124,18 @@ whapi_to_posixct <- function(x) {
 #'
 #' @examples
 #' # Suppose `resp` is the parsed JSON returned from Whapi:
-#' # out <- list(
-#' #   sent = TRUE,
-#' #   message = list(
-#' #     id = "abc123",
-#' #     chat_id = "558199999999@s.whatsapp.net",
-#' #     timestamp = 1756426418,
-#' #     type = "location",
-#' #     status = "pending"
-#' #   )
-#' # )
-#' #
-#' # whapi_extract_common_fields(out, fallback_to = "558199999999")
+#'  out <- list(
+#'    sent = TRUE,
+#'    message = list(
+#'      id = "abc123",
+#'      chat_id = "558199999999@s.whatsapp.net",
+#'      timestamp = 1756426418,
+#'      type = "location",
+#'      status = "pending"
+#'    )
+#'  )
+#'
+#'  whapi_extract_common_fields(out, fallback_to = "558199999999")
 #'
 #' @seealso
 #' Used internally in wrappers like [whapi_send_text()],
@@ -233,7 +233,7 @@ whapi_perform_request <- function(
   req <- req |>
     httr2::req_timeout(timeout) |>
     httr2::req_retry(max_tries = 3,
-                     backoff = ~ httr2::req_retry_exponential(.x, base = 0.5)) |>
+                     backoff = ~ httr2::req_retry(.x, max_tries = 3)) |>
     httr2::req_error(is_error = ~ .x$status_code >= 400)
 
   resp <- httr2::req_perform(req)
@@ -253,7 +253,7 @@ whapi_perform_request <- function(
 #' @param wide_link_preview Logical (optional). TRUE to enable wide preview for links.
 #' @param mentions Character vector (optional). Numbers to mention (without "+").
 #'   Remember to include @<number> inside the message body as well.
-#' @param view_once Logical (optional). TRUE to mark message as “view once”.
+#' @param view_once Logical (optional). TRUE to mark message as "view once".
 #' @param timeout Numeric. Request timeout in seconds. Default: 30.
 #' @param verbose Logical. Print messages via cli? Default: TRUE.
 #'
@@ -261,19 +261,21 @@ whapi_perform_request <- function(
 #'   the full API response in column `resp` (as list).
 #'
 #' @examples
+#' \dontrun{
 #' # Make sure you set WHAPI_TOKEN in your environment or pass via argument
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #'
 #' # Simple example:
-#' # whapi_send_text("5581999999999", "Hello! Test message via API ✅")
+#'  whapi_send_text("5581999999999", "Hello! Test message via API")
 #'
 #' # With extra options:
-#' # whapi_send_text(
-#' #   to = "5581999999999",
-#' #   body = "Hello, @5581999999999 👋",
-#' #   mentions = c("5581999999999"),
-#' #   typing_time = 2, no_link_preview = TRUE
-#' # )
+#'  whapi_send_text(
+#'    to = "5581999999999",
+#'    body = "Hello, @5581999999999 Ola",
+#'    mentions = c("5581999999999"),
+#'    typing_time = 2, no_link_preview = TRUE
+#'  )
+#'  }
 #' @export
 whapi_send_text <- function(
     to,
@@ -316,10 +318,10 @@ whapi_send_text <- function(
 
   if (verbose) {
     cli::cli_inform(c(
-      "i" = "Sending text message via Whapi.Cloud…",
+      "i" = "Sending text message via Whapi.Cloud...",
       ">" = paste0("To: ", to_clean,
                    " | Body: ", substr(body, 1, min(nchar(body), 80)),
-                   if (nchar(body) > 80) "…")
+                   if (nchar(body) > 80) "...")
     ))
   }
 
@@ -422,12 +424,12 @@ whapi_get_message <- function(
 #' @return A character vector of the same length with slugified IDs.
 #'
 #' @examples
-#' whapi_slugify(c("Yes!", "Call Us", "Promoção Rápida", "###"))
+#' whapi_slugify(c("Yes!", "Call Us", "Sale!", "###"))
 #' # -> "yes", "call_us", "promocao_rapida", "btn"
 #'
 #' # Use case in button creation:
 #' titles <- c("Buy Now", "Learn More")
-#' ids <- .whapi_slugify(titles)
+#' ids <- whapi_slugify(titles)
 #' tibble::tibble(title = titles, id = ids)
 #'
 #' @seealso Used internally in `whapi_send_quick_reply()` and other
@@ -448,7 +450,7 @@ whapi_slugify <- function(x) {
 #'
 #' @description
 #' Ensures that a character vector of identifiers is unique by appending
-#' numeric suffixes (`_2`, `_3`, …) when duplicates are found, while
+#' numeric suffixes (`_2`, `_3`, ...) when duplicates are found, while
 #' preserving the original order.
 #'
 #' @details
@@ -471,12 +473,12 @@ whapi_slugify <- function(x) {
 #' whapi_make_unique(c("yes", "no", "yes", "yes", "maybe", "no"))
 #' # -> "yes", "no", "yes_2", "yes_3", "maybe", "no_2"
 #'
-#' # Combined with .whapi_slugify
+#' # Combined with whapi_slugify
 #' titles <- c("Yes!", "Yes!", "No?")
 #' ids <- whapi_make_unique(whapi_slugify(titles))
 #' tibble::tibble(title = titles, id = ids)
 #'
-#' @seealso [.whapi_slugify()] for slug-safe ID creation.
+#' @seealso [whapi_slugify()] for slug-safe ID creation.
 #'
 #' @importFrom purrr map_chr
 #' @export
@@ -526,7 +528,9 @@ whapi_make_unique <- function(x) {
 #' (if provided).
 #'
 #' @examples
+#' \dontrun{
 #' # Minimal body only
+#'
 #' whapi_common_blocks("5581999999999", body_text = "Choose an option below")
 #'
 #' # With header and footer
@@ -534,9 +538,9 @@ whapi_make_unique <- function(x) {
 #'   to = "5581999999999",
 #'   body_text   = "Do you confirm?",
 #'   header_text = "Booking Confirmation",
-#'   footer_text = "Reply now 👇"
+#'   footer_text = "Reply now"
 #' )
-#'
+#'}
 #' @seealso [whapi_send_quick_reply()], [whapi_send_list()],
 #' [whapi_send_mixed_actions()]
 #' @export
@@ -558,8 +562,8 @@ whapi_common_blocks <- function(to, body_text, header_text = NULL, footer_text =
 #' - Accepts aliases `label` / `name` and maps them to `title`;
 #' - Requires a non-empty `title`;
 #' - Auto-generates `id` when missing using slugification plus uniqueness
-#'   enforcement (e.g., `"Buy Now" → "buy_now"`, duplicates become
-#'   `"buy_now_2"`, `"buy_now_3"`, …).
+#'   enforcement (e.g., `"Buy Now" -> "buy_now"`, duplicates become
+#'   `"buy_now_2"`, `"buy_now_3"`, ...).
 #'
 #' This is useful before building payloads for Whapi interactive endpoints
 #' (e.g., buttons, mixed actions, etc.).
@@ -575,7 +579,7 @@ whapi_common_blocks <- function(to, body_text, header_text = NULL, footer_text =
 #'   unique `id` is created.
 #'
 #' @examples
-#' # From tibble (title only → ids auto-generated)
+#' # From tibble (title only -> ids auto-generated)
 #' # tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
 #' #   whapi_coerce_buttons_base()
 #'
@@ -585,7 +589,7 @@ whapi_common_blocks <- function(to, body_text, header_text = NULL, footer_text =
 #' #   list(title = "Website")  # will get an auto id too
 #' # ))
 #'
-#' @seealso `.whapi_slugify()`, `whapi_make_unique()`
+#' @seealso `whapi_slugify()`, `whapi_make_unique()`
 #'
 #' @importFrom purrr transpose map map_lgl map_chr imap
 #' @importFrom cli cli_inform cli_abort
@@ -610,7 +614,7 @@ whapi_coerce_buttons_base <- function(buttons, verbose = TRUE) {
   }
 
   if (isTRUE(verbose)) {
-    cli::cli_inform(c("i" = paste0("Coercing ", length(btns), " button(s)…")))
+    cli::cli_inform(c("i" = paste0("Coercing ", length(btns), " button(s)...")))
   }
 
   # Map aliases label/name -> title
@@ -670,7 +674,7 @@ whapi_coerce_buttons_base <- function(buttons, verbose = TRUE) {
 #' @description
 #' Internal helper that prepares **quick reply** buttons for Whapi interactive
 #' messages. It relies on [whapi_coerce_buttons_base()] to normalize input
-#' (accept `data.frame`/`list`, map aliases `label`/`name` → `title`,
+#' (accept `data.frame`/`list`, map aliases `label`/`name` -> `title`,
 #' auto-generate `id` via slug + uniqueness) and then:
 #' - Enforces `type = "quick_reply"` for all buttons;
 #' - Requires the fields `title` and `id`;
@@ -708,7 +712,7 @@ whapi_coerce_buttons_quick <- function(buttons, verbose = TRUE) {
     cli::cli_abort("WhatsApp allows a maximum of 3 quick reply buttons.")
   }
   if (isTRUE(verbose)) {
-    cli::cli_inform(c("i" = paste0("Validating ", n, " quick reply button(s)…")))
+    cli::cli_inform(c("i" = paste0("Validating ", n, " quick reply button(s)...")))
   }
 
   # enforce type and required fields
@@ -740,9 +744,9 @@ whapi_coerce_buttons_quick <- function(buttons, verbose = TRUE) {
 #' `data.frame`/`tibble` or `list`, maps aliases to `title`, auto-creates `id`
 #' with slug + uniqueness) and then validates each button according to its
 #' declared `type`:
-#' - `url`  → requires fields: `title`, `id`, `url`
-#' - `call` → requires fields: `title`, `id`, `phone_number`
-#' - `copy` → requires fields: `title`, `id`, `copy_code`
+#' - `url`  -> requires fields: `title`, `id`, `url`
+#' - `call` -> requires fields: `title`, `id`, `phone_number`
+#' - `copy` -> requires fields: `title`, `id`, `copy_code`
 #'
 #' Enforces WhatsApp constraints: **1 to 3** buttons per message.
 #'
@@ -792,7 +796,7 @@ whapi_coerce_buttons_mixed <- function(buttons, verbose = TRUE) {
     cli::cli_abort("WhatsApp allows a maximum of 3 buttons.")
   }
   if (isTRUE(verbose)) {
-    cli::cli_inform(c("i" = paste0("Validating ", n, " mixed button(s)…")))
+    cli::cli_inform(c("i" = paste0("Validating ", n, " mixed button(s)...")))
   }
 
   valid_types <- c("url", "call", "copy")
@@ -892,7 +896,7 @@ whapi_validate_list_sections <- function(list_sections, verbose = TRUE, trim = T
   }
 
   if (isTRUE(verbose)) {
-    cli::cli_inform(c("i" = paste0("Validating ", length(list_sections), " section(s) for LIST message…")))
+    cli::cli_inform(c("i" = paste0("Validating ", length(list_sections), " section(s) for LIST message...")))
   }
 
   # validate each section and its rows
@@ -952,13 +956,14 @@ whapi_validate_list_sections <- function(list_sections, verbose = TRUE, trim = T
 #' @return A tibble with fields `id`, `to`, `status`, `timestamp`, and raw response `resp`.
 #'
 #' @examples
+#' \dontrun{
 #' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #' # whapi_send_quick_reply(
 #' #   to = "5581999999999",
 #' #   body_text = "Do you confirm?",
 #' #   buttons = tibble::tribble(~title, "YES", "NO")
 #' # )
-#'
+#'}
 #' @seealso [whapi_coerce_buttons_quick()], [whapi_common_blocks()], [whapi_perform_request()]
 #' @export
 whapi_send_quick_reply <- function(
@@ -989,11 +994,11 @@ whapi_send_quick_reply <- function(
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Sending QUICK REPLY interactive message via Whapi.Cloud…",
+      "i" = "Sending QUICK REPLY interactive message via Whapi.Cloud...",
       ">" = paste0("To: ", blocks$to,
                    " | Buttons: ", length(btns),
                    " | Preview: ", substr(body_text, 1, min(nchar(body_text), 60)),
-                   if (nchar(body_text) > 60) "…")
+                   if (nchar(body_text) > 60) "...")
     ))
   }
 
@@ -1042,17 +1047,18 @@ whapi_send_quick_reply <- function(
 #' in `resp`.
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # whapi_send_mixed_actions(
-#' #   to = "5581999999999",
-#' #   body_text = "Pick an option:",
-#' #   buttons = list(
-#' #     list(type="url",  title="Website",   url="https://example.com"),
-#' #     list(type="call", title="Call us",   phone_number="5581999999999"),
-#' #     list(type="copy", title="Copy OTP",  copy_code="123456")
-#' #   )
-#' # )
-#'
+#' \dontrun{
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  whapi_send_mixed_actions(
+#'    to = "5581999999999",
+#'    body_text = "Pick an option:",
+#'    buttons = list(
+#'      list(type="url",  title="Website",   url="https://example.com"),
+#'      list(type="call", title="Call us",   phone_number="5581999999999"),
+#'      list(type="copy", title="Copy OTP",  copy_code="123456")
+#'    )
+#'  )
+#'}
 #' @seealso [whapi_coerce_buttons_mixed()], [whapi_common_blocks()], [whapi_perform_request()]
 #' @export
 whapi_send_mixed_actions <- function(
@@ -1088,12 +1094,12 @@ whapi_send_mixed_actions <- function(
     types <- vapply(btns, `[[`, "", "type")
     counts <- if (length(types)) paste(names(table(types)), as.integer(table(types)), sep = "=", collapse = ", ") else "none"
     cli::cli_inform(c(
-      "i" = "Sending MIXED-ACTIONS interactive message via Whapi.Cloud…",
+      "i" = "Sending MIXED-ACTIONS interactive message via Whapi.Cloud...",
       ">" = paste0("To: ", blocks$to,
                    " | Buttons: ", length(btns),
                    " (", counts, ")",
                    " | Preview: ", substr(body_text, 1, min(nchar(body_text), 60)),
-                   if (nchar(body_text) > 60) "…")
+                   if (nchar(body_text) > 60) "...")
     ))
   }
 
@@ -1131,7 +1137,7 @@ whapi_send_mixed_actions <- function(
 #' @param list_sections A list of sections. Each section is a named list:
 #'   `list(title = <chr>, rows = list(list(id=<chr>, title=<chr>, description=<chr>?), ...))`.
 #' @param list_label Character(1), optional. Button label that opens the list.
-#'   Default: `"Choose…"`
+#'   Default: `"Choose..."`
 #' @param header_text,footer_text Character(1), optional. Header/footer texts.
 #' @param token Bearer token. Defaults to env var `WHAPI_TOKEN`.
 #' @param timeout Numeric. Request timeout in seconds. Default 30.
@@ -1141,32 +1147,33 @@ whapi_send_mixed_actions <- function(
 #' A tibble with `id`, `to`, `status`, `timestamp`, and the raw response in `resp`.
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # sections <- list(
-#' #   list(
-#' #     title = "Burgers",
-#' #     rows = list(
-#' #       list(id="b1", title="Plain",  description="No cheese, no sauce"),
-#' #       list(id="b2", title="Cheese", description="With melted cheese")
-#' #     )
-#' #   ),
-#' #   list(
-#' #     title = "Drinks",
-#' #     rows = list(
-#' #       list(id="d1", title="Water"),
-#' #       list(id="d2", title="Soda", description="Assorted flavors")
-#' #     )
-#' #   )
-#' # )
-#' # whapi_send_list(
-#' #   to = "5581999999999",
-#' #   body_text = "Choose your order:",
-#' #   list_sections = sections,
-#' #   list_label = "Open menu",
-#' #   header_text = "Our Menu",
-#' #   footer_text = "Thanks!"
-#' # )
-#'
+#' \dontrun{
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  sections <- list(
+#'    list(
+#'      title = "Burgers",
+#'      rows = list(
+#'        list(id="b1", title="Plain",  description="No cheese, no sauce"),
+#'        list(id="b2", title="Cheese", description="With melted cheese")
+#'      )
+#'    ),
+#'    list(
+#'      title = "Drinks",
+#'      rows = list(
+#'        list(id="d1", title="Water"),
+#'        list(id="d2", title="Soda", description="Assorted flavors")
+#'      )
+#'    )
+#'  )
+#'  whapi_send_list(
+#'    to = "5581999999999",
+#'    body_text = "Choose your order:",
+#'    list_sections = sections,
+#'    list_label = "Open menu",
+#'    header_text = "Our Menu",
+#'    footer_text = "Thanks!"
+#'  )
+#'}
 #' @seealso [whapi_validate_list_sections()], [whapi_common_blocks()],
 #'   [whapi_perform_request()], [whapi_extract_common_fields()]
 #' @export
@@ -1174,7 +1181,7 @@ whapi_send_list <- function(
     to,
     body_text,
     list_sections,
-    list_label = "Choose…",
+    list_label = "Choose...",
     header_text = NULL,
     footer_text = NULL,
     token = Sys.getenv("WHAPI_TOKEN", unset = ""),
@@ -1184,7 +1191,6 @@ whapi_send_list <- function(
   if (!requireNamespace("tibble", quietly = TRUE)) stop("Package 'tibble' is required.")
   if (!requireNamespace("cli",    quietly = TRUE)) stop("Package 'cli' is required.")
 
-  # blocos básicos + validação das seções/linhas
   blocks <- whapi_common_blocks(whapi_normalize_to(to), body_text, header_text, footer_text)
   secs   <- whapi_validate_list_sections(list_sections, verbose = verbose, trim = TRUE)
 
@@ -1194,20 +1200,20 @@ whapi_send_list <- function(
     body   = blocks$body,
     footer = blocks$footer,
     type   = "list",
-    action = list(list = list(sections = secs, label = if (is.null(list_label)) "Choose…" else list_label))
+    action = list(list = list(sections = secs, label = if (is.null(list_label)) "Choose..." else list_label))
   )
 
   # Logs
   if (isTRUE(verbose)) {
     total_rows <- sum(vapply(secs, function(s) length(s$rows), integer(1)))
     cli::cli_inform(c(
-      "i" = "Sending LIST interactive message via Whapi.Cloud…",
+      "i" = "Sending LIST interactive message via Whapi.Cloud...",
       ">" = paste0("To: ", blocks$to,
                    " | Sections: ", length(secs),
                    " | Rows: ", total_rows,
                    " | Label: ", list_label,
                    " | Preview: ", substr(body_text, 1, min(nchar(body_text), 60)),
-                   if (nchar(body_text) > 60) "…")
+                   if (nchar(body_text) > 60) "...")
     ))
   }
 
@@ -1249,7 +1255,7 @@ whapi_send_list <- function(
 #' - When `full = TRUE`, `_full=true` is added to the querystring to request
 #'   higher-resolution avatars (if supported).
 #'
-#' @param contacts Character vector. Phones in E.164 digits (no “+”) or chat IDs.
+#' @param contacts Character vector. Phones in E.164 digits (no "+") or chat IDs.
 #' @param token Bearer token. Defaults to env var `WHAPI_TOKEN`.
 #' @param full Logical. If `TRUE`, add `_full=true` query param. Default `TRUE`.
 #' @param timeout Numeric. Request timeout (seconds). Default `30`.
@@ -1262,13 +1268,14 @@ whapi_send_list <- function(
 #' - `resp` with the raw response (list).
 #'
 #' @examples
+#' \dontrun{
 #' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #' # Single:
 #' # whapi_get_contact_profile("5581999999999")
 #'
 #' # Mixed (number + group JID):
 #' # whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))
-#'
+#'}
 #' @importFrom tibble tibble
 #' @importFrom purrr map_chr map_dfr
 #' @importFrom cli cli_inform cli_abort
@@ -1294,7 +1301,7 @@ whapi_get_contact_profile <- function(
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Fetching contact profile(s) from Whapi.Cloud…",
+      "i" = "Fetching contact profile(s) from Whapi.Cloud...",
       ">" = paste("Total contacts:", length(ids))
     ))
   }
@@ -1330,7 +1337,7 @@ whapi_get_contact_profile <- function(
 #' @description
 #' Sends an image using Whapi's `POST /messages/image`.
 #' Supports three input modes through `type`:
-#' - `"file"`: local path → reads bytes and builds a `data:<mime>;name=<file>;base64,<...>` URI
+#' - `"file"`: local path -> reads bytes and builds a `data:<mime>;name=<file>;base64,<...>` URI
 #' - `"url"`: direct `http(s)` URL
 #' - `"base64"`: pre-built data URI (`data:image/...;base64,...`)
 #'
@@ -1347,13 +1354,14 @@ whapi_get_contact_profile <- function(
 #' A tibble with `id`, `to`, `status`, `timestamp`, `timestamp_dt`, and raw `resp`.
 #'
 #' @examples
+#' \dontrun{
 #' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # whapi_send_image("5581999999999", image = "card.png", type = "file", caption = "Card")
-#' # whapi_send_image("5581999999999", image = "https://site.com/img.png", type = "url")
-#' # b64 <- openssl::base64_encode(readBin("card.png","raw",file.info("card.png")$size))
-#' # data_uri <- sprintf("data:image/png;name=%s;base64,%s", basename("card.png"), b64)
-#' # whapi_send_image("5581999999999", image = data_uri, type = "base64")
-#'
+#'  whapi_send_image("5581999999999", image = "card.png", type = "file", caption = "Card")
+#'  whapi_send_image("5581999999999", image = "https://site.com/img.png", type = "url")
+#'  b64 <- openssl::base64_encode(readBin("card.png","raw",file.info("card.png")$size))
+#'  data_uri <- sprintf("data:image/png;name=%s;base64,%s", basename("card.png"), b64)
+#'  whapi_send_image("5581999999999", image = data_uri, type = "base64")
+#'}
 #' @importFrom stringr str_detect
 #' @importFrom mime guess_type
 #' @importFrom openssl base64_encode
@@ -1415,9 +1423,9 @@ whapi_send_image <- function(
   # Logs
   if (isTRUE(verbose)) {
     prev <- if (!is.null(caption)) paste0(" | Caption: ", substr(caption, 1, min(nchar(caption), 50)),
-                                          if (nchar(caption) > 50) "…") else ""
+                                          if (nchar(caption) > 50) "...") else ""
     cli::cli_inform(c(
-      "i" = "Sending image via Whapi.Cloud…",
+      "i" = "Sending image via Whapi.Cloud...",
       ">" = paste0("To: ", to_clean, " | Type: ", type, prev)
     ))
   }
@@ -1441,7 +1449,7 @@ whapi_send_image <- function(
 #' @description
 #' Sends a document using Whapi's `POST /messages/document`.
 #' Supports three input modes via `type`:
-#' - `"file"`   : local path → reads bytes and builds a data URI
+#' - `"file"`   : local path -> reads bytes and builds a data URI
 #'   (`data:<mime>;name=<file>;base64,<...>`);
 #' - `"url"`    : direct `http(s)` URL;
 #' - `"base64"` : pre-built data URI (`data:application/...;name=...;base64,...`).
@@ -1451,9 +1459,9 @@ whapi_send_image <- function(
 #' @param type One of `c("file","url","base64")`. Default: `"file"`.
 #' @param caption Optional caption text.
 #' @param filename Optional filename shown to the user. If omitted:
-#'   - `type="file"`   → uses `basename(document)`;
-#'   - `type="url"`    → uses the URL basename (without query/fragment);
-#'   - `type="base64"` → tries the `name=` part inside the data URI.
+#'   - `type="file"`   -> uses `basename(document)`;
+#'   - `type="url"`    -> uses the URL basename (without query/fragment);
+#'   - `type="base64"` -> tries the `name=` part inside the data URI.
 #' @param token Bearer token (defaults to env var `WHAPI_TOKEN`).
 #' @param timeout Numeric. Request timeout in seconds. Default `30`.
 #' @param verbose Logical. Print CLI messages? Default `TRUE`.
@@ -1462,13 +1470,15 @@ whapi_send_image <- function(
 #' A tibble with `id`, `to`, `status`, `timestamp`, `timestamp_dt`, and raw `resp`.
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # whapi_send_document("5581999999999", "report.pdf", type="file", caption="Monthly report")
-#' # whapi_send_document("5581999999999", "https://example.com/contract.docx", type="url")
-#' # b <- openssl::base64_encode(readBin("memo.odt","raw",file.info("memo.odt")$size))
-#' # du <- sprintf("data:application/vnd.oasis.opendocument.text;name=%s;base64,%s", basename("memo.odt"), b)
-#' # whapi_send_document("5581999999999", du, type="base64")
-#'
+#' \dontrun{
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  whapi_send_document("5581999999999", "report.pdf", type="file", caption="Monthly report")
+#'  whapi_send_document("5581999999999", "https://example.com/contract.docx", type="url")
+#'  b <- openssl::base64_encode(readBin("memo.odt","raw",file.info("memo.odt")$size))
+#'  du <- sprintf("data:application/vnd.oasis.opendocument.text;name=%s;base64,%s",
+#'   basename("memo.odt"), b)
+#'  whapi_send_document("5581999999999", du, type="base64")
+#' }
 #' @importFrom stringr str_detect str_replace str_remove str_remove_all
 #' @importFrom mime guess_type
 #' @importFrom openssl base64_encode
@@ -1556,9 +1566,9 @@ whapi_send_document <- function(
       if (!is.null(final_filename)) paste0(" | Filename: ", final_filename),
       if (!is.null(caption)) paste0(" | Caption: ",
                                     substr(caption, 1, min(nchar(caption), 50)),
-                                    if (nchar(caption) > 50) "…")
+                                    if (nchar(caption) > 50) "...")
     )
-    cli::cli_inform(c("i" = "Sending document via Whapi.Cloud…", ">" = meta))
+    cli::cli_inform(c("i" = "Sending document via Whapi.Cloud...", ">" = meta))
   }
 
   # POST /messages/document via the generic helper
@@ -1594,14 +1604,15 @@ whapi_send_document <- function(
 #' A tibble with `id`, `to`, `status`, `timestamp`, `timestamp_dt`, and raw `resp`.
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # whapi_send_location("5581999999999",
-#' #   latitude = -8.063169, longitude = -34.871139,
-#' #   name = "Marco Zero", address = "Recife, PE")
+#' \dontrun{
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  whapi_send_location("5581999999999",
+#'    latitude = -8.063169, longitude = -34.871139,
+#'    name = "Marco Zero", address = "Recife, PE")
 #'
 #' # Group id example
-#' # whapi_send_location("1203630xxxxxxxx@g.us", -8.045, -34.91)
-#'
+#'  whapi_send_location("1203630xxxxxxxx@g.us", -8.045, -34.91)
+#'}
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
 #' @export
@@ -1645,13 +1656,13 @@ whapi_send_location <- function(
   # Logs
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Sending LOCATION message via Whapi.Cloud…",
+      "i" = "Sending LOCATION message via Whapi.Cloud...",
       ">" = paste0("To: ", to_clean,
                    " | Lat/Lng: ", signif(latitude, 8), ", ", signif(longitude, 8),
                    if (!is.null(name))    paste0(" | Name: ", substr(name, 1, 40),
-                                                 if (nchar(name) > 40) "…"),
+                                                 if (nchar(name) > 40) "..."),
                    if (!is.null(address)) paste0(" | Address: ", substr(address, 1, 50),
-                                                 if (nchar(address) > 50) "…"))
+                                                 if (nchar(address) > 50) "..."))
     ))
   }
 
@@ -1671,26 +1682,27 @@ whapi_send_location <- function(
 #' Mark a WhatsApp message as READ (Whapi.Cloud)
 #'
 #' @description
-#' Marca uma mensagem como **lida** usando `PUT /messages/{MessageID}`.
-#' Este endpoint retorna somente um ACK minimalista no corpo:
+#' Marks a message as **read** using `PUT /messages/{MessageID}`.
+#' This endpoint returns only a minimalistic ACK in the body:
 #' `{"success": true | false}`.
 #'
-#' @param message_id Character(1). ID da mensagem (WAMID) a marcar como lida.
-#' @param token Character(1). Bearer token. Padrão: `Sys.getenv("WHAPI_TOKEN")`.
-#' @param timeout Numeric(1). Tempo limite (s). Padrão: 30.
-#' @param verbose Logical(1). Exibir logs via \pkg{cli}? Padrão: `TRUE`.
+#' @param message_id Character(1). Message ID (WAMID) to be marked as read.
+#' @param token Character(1). Bearer token. Default: `Sys.getenv("WHAPI_TOKEN")`.
+#' @param timeout Numeric(1). Timeout (s). Default: 30.
+#' @param verbose Logical(1). Show logs via \pkg{cli}? Default: `TRUE`.
 #'
 #' @return
-#' Tibble com colunas:
-#' - `id`        — o `message_id` informado;
-#' - `status`    — `"read"` quando `success=TRUE`, `"error"` caso contrário;
-#' - `success`   — lógico vindo do endpoint;
-#' - `resp`      — resposta crua (lista).
+#' A tibble with the following columns:
+#' - `id`        - the provided `message_id`;
+#' - `status`    - `"read"` when `success=TRUE`, `"error"` otherwise;
+#' - `success`   - logical value returned by the endpoint;
+#' - `resp`      - raw response (list).
 #'
 #' @examples
+#' \dontrun{
 #' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #' # whapi_mark_message_read("PsqXn5SAD5v7HRA-wHqB9tMeGQ")
-#'
+#' }
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
 #' @export
@@ -1710,12 +1722,12 @@ whapi_mark_message_read <- function(
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Marking message as READ via Whapi.Cloud…",
+      "i" = "Marking message as READ via Whapi.Cloud...",
       ">" = paste0("Message ID: ", message_id)
     ))
   }
 
-  # Algumas instâncias aceitam corpo vazio; aqui usamos {"status":"read"} por compatibilidade.
+
   out <- whapi_perform_request(
     endpoint = endpoint,
     payload  = list(status = "read"),
@@ -1753,7 +1765,7 @@ whapi_mark_message_read <- function(
 #' The endpoint returns only `{ "success": true | false }`.
 #'
 #' @param message_id Character(1). Target message ID (WAMID).
-#' @param emoji Character(1). Emoji to react with (e.g., "👍", "❤️").
+#' @param emoji Character(1). Emoji to react with.
 #'   To remove a reaction, pass an empty string `""`.
 #' @param token Character(1). Bearer token. Defaults to env var `WHAPI_TOKEN`.
 #' @param timeout Numeric(1). Request timeout in seconds. Default: 30.
@@ -1761,20 +1773,21 @@ whapi_mark_message_read <- function(
 #'
 #' @return
 #' A tibble with columns:
-#' - `id`        — message_id reacted to
-#' - `emoji`     — emoji used (or `""` if removed)
-#' - `status`    — `"ok"` if success, `"error"` otherwise
-#' - `success`   — logical flag from API
-#' - `resp`      — raw response (list)
+#' - `id`        - message_id reacted to
+#' - `emoji`     - emoji used (or `""` if removed)
+#' - `status`    - `"ok"` if success, `"error"` otherwise
+#' - `success`   - logical flag from API
+#' - `resp`      - raw response (list)
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # Add a reaction:
-#' # whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "❤️")
-#' #
-#' # Remove a reaction:
-#' # whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")
+#' \dontrun{
+#' Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#' Add a reaction:
+#' whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "<heart emoji>")
 #'
+#' # Remove a reaction:
+#' whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")
+#'}
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
 #' @export
@@ -1796,7 +1809,7 @@ whapi_react_to_message <- function(
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Sending reaction via Whapi.Cloud…",
+      "i" = "Sending reaction via Whapi.Cloud...",
       ">" = paste0("Message ID: ", message_id,
                    " | Emoji: ", ifelse(nzchar(emoji), emoji, "<remove>"))
     ))
@@ -1854,13 +1867,14 @@ whapi_react_to_message <- function(
 #' plus the raw response in `resp`.
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#' \dontrun{
+#' Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #' # Default check (wakeup=TRUE, channel_type="web")
-#' # whapi_check_health()
+#' whapi_check_health()
 #'
 #' # Check with channel_type = "mobile"
-#' # whapi_check_health(channel_type = "mobile")
-#'
+#' whapi_check_health(channel_type = "mobile")
+#' }
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
 #' @export
@@ -1885,7 +1899,7 @@ whapi_check_health <- function(
 
   if (isTRUE(verbose)) {
     cli::cli_inform(c(
-      "i" = "Checking Whapi.Cloud health…",
+      "i" = "Checking Whapi.Cloud health...",
       ">" = paste0("Wakeup: ", wakeup, " | Channel: ", channel_type)
     ))
   }
@@ -1940,20 +1954,22 @@ whapi_check_health <- function(
 #' @return tibble with id, to, status, timestamp, and raw response in `resp`.
 #'
 #' @examples
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#' \dontrun{
+#' Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #'
 #' # 1) Local file
-#' # whapi_send_sticker("558191812121",
-#' #   sticker = "sticker.webp", type = "file")
+#'  whapi_send_sticker("558191812121",
+#'    sticker = "sticker.webp", type = "file")
 #'
 #' # 2) Remote URL
-#' # whapi_send_sticker("558191812121",
-#' #   sticker = "https://example.com/condepe.webp", type = "url")
+#'  whapi_send_sticker("558191812121",
+#'    sticker = "https://example.com/condepe.webp", type = "url")
 #'
 #' # 3) Pre-encoded Base64
-#' # b64 <- openssl::base64_encode(readBin("sticker.webp","raw",file.info("sticker.webp")$size))
-#' # data_uri <- sprintf("data:image/webp;name=%s;base64,%s", basename("sticker.webp"), b64)
-#' # whapi_send_sticker("558191812121", sticker = data_uri, type = "base64")
+#'  b64 <- openssl::base64_encode(readBin("sticker.webp","raw",file.info("sticker.webp")$size))
+#'  data_uri <- sprintf("data:image/webp;name=%s;base64,%s", basename("sticker.webp"), b64)
+#'  whapi_send_sticker("558191812121", sticker = data_uri, type = "base64")
+#'  }
 #' @export
 whapi_send_sticker <- function(
     to,
@@ -2004,7 +2020,7 @@ whapi_send_sticker <- function(
 
   if (verbose) {
     cli::cli_inform(c(
-      "i" = "Sending sticker via Whapi.Cloud…",
+      "i" = "Sending sticker via Whapi.Cloud...",
       ">" = paste0("To: ", to_clean, " | Type: ", type)
     ))
   }
@@ -2053,12 +2069,12 @@ whapi_send_sticker <- function(
 #'
 #' @examples
 #' de_para_servicos <- tibble::tibble(
-#'   section   = c("Outros Serviços","Renovações","Anuência Prévia"),
+#'   section   = c("Outros Servicos","Renovacoes","Anuencia Previa"),
 #'   id        = c("os2","r4","ap1"),
-#'   title     = c("🔍 Consulta Prévia",
-#'                 "📄 Renovação de Consulta Prévia",
-#'                 "🗂️ Desmembramento"),
-#'   descricao = c("Initial analysis…","Renewal…","Technical authorization…")
+#'   title     = c("Consulta Previa",
+#'                 "Renovacao de Consulta Previa",
+#'                 "Desmembramento"),
+#'   descricao = c("Initial analysis...","Renewal...","Technical authorization...")
 #' )
 #'
 #' # All sections (alphabetical)
@@ -2067,39 +2083,39 @@ whapi_send_sticker <- function(
 #' # Custom order and filter
 #' whapi_build_servicos_sections(
 #'   de_para_servicos,
-#'   section_order = c("Anuência Prévia","Outros Serviços")
+#'   section_order = c("Anuencia Previa","Outros Servicos")
 #' )
 #'
 #' @export
 whapi_build_servicos_sections <- function(tbl, section_order = NULL) {
   stopifnot(all(c("section","id","title","descricao") %in% names(tbl)))
 
-  tbl2 <- tbl %>%
-    dplyr::mutate(ord = readr::parse_number(.data$id)) %>%
-    dplyr::filter(!is.na(.data$section))
+  tbl2 <- tbl |>
+    dplyr::mutate(ord = readr::parse_number(id)) |>
+    dplyr::filter(!is.na(section))
 
   if (!is.null(section_order)) {
     # filter + keep order
-    tbl2 <- tbl2 %>%
-      dplyr::filter(.data$section %in% section_order) %>%
-      dplyr::mutate(section = factor(.data$section, levels = section_order))
+    tbl2 <- tbl2 |>
+      dplyr::filter(section %in% section_order) |>
+      dplyr::mutate(section = factor(section, levels = section_order))
   } else {
     # alphabetical
-    tbl2 <- tbl2 %>%
-      dplyr::mutate(section = factor(.data$section, levels = sort(unique(.data$section))))
+    tbl2 <- tbl2 |>
+      dplyr::mutate(section = factor(section, levels = sort(unique(section))))
   }
 
-  tbl2 <- tbl2 %>%
-    dplyr::arrange(.data$section, .data$ord)
+  tbl2 <- tbl2 |>
+    dplyr::arrange(section, ord)
 
-  sections <- split(tbl2, tbl2$section) %>%
+  sections <- split(tbl2, tbl2$section) |>
     purrr::map(function(df_sec) {
       rows <- purrr::pmap(df_sec[, c("id","title","descricao")],
                           function(id, title, descricao) {
                             list(id = id, title = title, description = descricao)
                           })
       list(title = as.character(unique(df_sec$section)), rows = rows)
-    }) %>%
+    }) |>
     unname()
 
   sections
@@ -2117,7 +2133,7 @@ whapi_build_servicos_sections <- function(tbl, section_order = NULL) {
 #'
 #' @return A character vector in lowercase ASCII without accents.
 #' @examples
-#' whapi_to_ascii_lower("São Paulo")
+#' whapi_to_ascii_lower("Sao Paulo")
 #' #> "sao paulo"
 #' @export
 whapi_to_ascii_lower <- function(x) {
@@ -2169,7 +2185,7 @@ whapi_match_digits <- function(haystack, needle, min_partial = 6) {
 #'
 #' @description
 #' Shortens text to a maximum width (character length). If the text is longer,
-#' it is truncated and an ellipsis (default `"…"`) is appended.
+#' it is truncated and an ellipsis (default `"..."`) is appended.
 #'
 #' @param x Character string to clip.
 #' @param width Maximum length of the output including ellipsis.
@@ -2178,9 +2194,9 @@ whapi_match_digits <- function(haystack, needle, min_partial = 6) {
 #' @return A clipped string with ellipsis if needed.
 #' @examples
 #' whapi_clip_text("This is a very long sentence that should be clipped.", width = 20)
-#' #> "This is a very long…"
+#' #> "This is a very long..."
 #' @export
-whapi_clip_text <- function(x, width = 420, ellipsis = "…") {
+whapi_clip_text <- function(x, width = 420, ellipsis = "...") {
   x <- stringr::str_trim(x %||% "")
   if (!nzchar(x)) return("")
   if (nchar(x) <= width) x else paste0(substr(x, 1, width - nchar(ellipsis)), ellipsis)
@@ -2220,9 +2236,9 @@ whapi_date_diff_days <- function(start, end) {
 #' whapi_fmt_date(Sys.Date())
 #' #> "31/08/2025"
 #' whapi_fmt_date(NA)
-#' #> "—"
+#' #> "-"
 #' @export
-whapi_fmt_date <- function(x, fmt = "%d/%m/%Y", na = "—") {
+whapi_fmt_date <- function(x, fmt = "%d/%m/%Y", na = "-") {
   if (is.null(x) || is.na(x)) return(na)
   format(as.Date(x), fmt)
 }

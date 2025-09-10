@@ -3,7 +3,7 @@
 into a nested list of sections/rows in the format expected by Whapi interactive
 messages."><meta property="og:description" content="Converts a tibble of services (with columns id, title, description, and section)
 into a nested list of sections/rows in the format expected by Whapi interactive
-messages."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+messages."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -11,7 +11,7 @@ messages."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@ messages."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Build Whapi service sections from a tibble (with <code>section</code> column)</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Build Whapi service sections from a tibble (with <code>section</code> column)</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_build_servicos_sections.Rd</code></div>
     </div>
@@ -83,24 +83,112 @@ If <code>NULL</code>, all sections are included in alphabetical order.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">de_para_servicos</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  section   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Outros Serviços"</span>,<span class="st">"Renovações"</span>,<span class="st">"Anuência Prévia"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  section   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Outros Servicos"</span>,<span class="st">"Renovacoes"</span>,<span class="st">"Anuencia Previa"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  id        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"os2"</span>,<span class="st">"r4"</span>,<span class="st">"ap1"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  title     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"🔍 Consulta Prévia"</span>,</span></span>
-<span class="r-in"><span>                <span class="st">"📄 Renovação de Consulta Prévia"</span>,</span></span>
-<span class="r-in"><span>                <span class="st">"🗂️ Desmembramento"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  descricao <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Initial analysis…"</span>,<span class="st">"Renewal…"</span>,<span class="st">"Technical authorization…"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  title     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Consulta Previa"</span>,</span></span>
+<span class="r-in"><span>                <span class="st">"Renovacao de Consulta Previa"</span>,</span></span>
+<span class="r-in"><span>                <span class="st">"Desmembramento"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  descricao <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Initial analysis..."</span>,<span class="st">"Renewal..."</span>,<span class="st">"Technical authorization..."</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># All sections (alphabetical)</span></span></span>
 <span class="r-in"><span><span class="fu">whapi_build_servicos_sections</span><span class="op">(</span><span class="va">de_para_servicos</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in tbl %&gt;% dplyr::mutate(ord = readr::parse_number(.data$id)) %&gt;%     dplyr::filter(!is.na(.data$section)):</span> could not find function "%&gt;%"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Anuencia Previa"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]$id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ap1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Desmembramento"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Technical authorization..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Outros Servicos"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]$id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "os2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Consulta Previa"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Initial analysis..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Renovacoes"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]$rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]$rows[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]$rows[[1]]$id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "r4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]$rows[[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Renovacao de Consulta Previa"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]$rows[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Renewal..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Custom order and filter</span></span></span>
 <span class="r-in"><span><span class="fu">whapi_build_servicos_sections</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">de_para_servicos</span>,</span></span>
-<span class="r-in"><span>  section_order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Anuência Prévia"</span>,<span class="st">"Outros Serviços"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  section_order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Anuencia Previa"</span>,<span class="st">"Outros Servicos"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in tbl %&gt;% dplyr::mutate(ord = readr::parse_number(.data$id)) %&gt;%     dplyr::filter(!is.na(.data$section)):</span> could not find function "%&gt;%"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Anuencia Previa"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]$id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ap1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Desmembramento"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$rows[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Technical authorization..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Outros Servicos"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]$id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "os2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]$title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Consulta Previa"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$rows[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Initial analysis..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

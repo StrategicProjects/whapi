@@ -15,7 +15,7 @@ about (string, user info in About section),
 icon (string, profile preview icon URL),
 icon_full (string, full avatar URL).
 
-"><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+"><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -23,7 +23,7 @@ icon_full (string, full avatar URL).
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@ icon_full (string, full avatar URL).
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Get WhatsApp contact profile(s) via Whapi.Cloud</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Get WhatsApp contact profile(s) via Whapi.Cloud</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_get_contact_profile.Rd</code></div>
     </div>
@@ -73,7 +73,7 @@ This version assumes the response body contains:</p><ul><li><p><code>name</code>
 
 
 <dl><dt id="arg-contacts">contacts<a class="anchor" aria-label="anchor" href="#arg-contacts"></a></dt>
-<dd><p>Character vector. Phones in E.164 digits (no “+”) or chat IDs.</p></dd>
+<dd><p>Character vector. Phones in E.164 digits (no "+") or chat IDs.</p></dd>
 
 
 <dt id="arg-token">token<a class="anchor" aria-label="anchor" href="#arg-token"></a></dt>
@@ -110,13 +110,14 @@ higher-resolution avatars (if supported).</p></li>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
 <span class="r-in"><span><span class="co"># Single:</span></span></span>
 <span class="r-in"><span><span class="co"># whapi_get_contact_profile("5581999999999")</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Mixed (number + group JID):</span></span></span>
 <span class="r-in"><span><span class="co"># whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))</span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -39,11 +39,12 @@ Calls \code{GET /health} to retrieve channel status, versions,
 uptime, device, IP, and user info.
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
+\dontrun{
+Sys.setenv(WHAPI_TOKEN = "your_token_here")
 # Default check (wakeup=TRUE, channel_type="web")
-# whapi_check_health()
+whapi_check_health()
 
 # Check with channel_type = "mobile"
-# whapi_check_health(channel_type = "mobile")
-
+whapi_check_health(channel_type = "mobile")
+}
 }

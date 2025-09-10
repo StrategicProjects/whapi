@@ -3,7 +3,7 @@
 Each button is normalized/validated by whapi_coerce_buttons_quick() and
 automatically gets a unique slugified id if missing."><meta property="og:description" content="Sends an interactive message of type QUICK REPLY via Whapi.
 Each button is normalized/validated by whapi_coerce_buttons_quick() and
-automatically gets a unique slugified id if missing."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+automatically gets a unique slugified id if missing."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -11,7 +11,7 @@ automatically gets a unique slugified id if missing."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@ automatically gets a unique slugified id if missing."><meta property="og:image" 
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Send a WhatsApp interactive message with QUICK REPLY buttons (Whapi.Cloud)</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Send a WhatsApp interactive message with QUICK REPLY buttons (Whapi.Cloud)</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_send_quick_reply.Rd</code></div>
     </div>
@@ -99,13 +99,14 @@ automatically gets a unique slugified <code>id</code> if missing.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Sys.setenv(WHAPI_TOKEN = "your_token_here")</span></span></span>
 <span class="r-in"><span><span class="co"># whapi_send_quick_reply(</span></span></span>
 <span class="r-in"><span><span class="co">#   to = "5581999999999",</span></span></span>
 <span class="r-in"><span><span class="co">#   body_text = "Do you confirm?",</span></span></span>
 <span class="r-in"><span><span class="co">#   buttons = tibble::tribble(~title, "YES", "NO")</span></span></span>
 <span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

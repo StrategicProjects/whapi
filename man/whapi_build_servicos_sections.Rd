@@ -45,12 +45,12 @@ Within each section, rows are ordered by the numeric part of \code{id}
 }
 \examples{
 de_para_servicos <- tibble::tibble(
-  section   = c("Outros Serviços","Renovações","Anuência Prévia"),
+  section   = c("Outros Servicos","Renovacoes","Anuencia Previa"),
   id        = c("os2","r4","ap1"),
-  title     = c("🔍 Consulta Prévia",
-                "📄 Renovação de Consulta Prévia",
-                "🗂️ Desmembramento"),
-  descricao = c("Initial analysis…","Renewal…","Technical authorization…")
+  title     = c("Consulta Previa",
+                "Renovacao de Consulta Previa",
+                "Desmembramento"),
+  descricao = c("Initial analysis...","Renewal...","Technical authorization...")
 )
 
 # All sections (alphabetical)
@@ -59,7 +59,7 @@ whapi_build_servicos_sections(de_para_servicos)
 # Custom order and filter
 whapi_build_servicos_sections(
   de_para_servicos,
-  section_order = c("Anuência Prévia","Outros Serviços")
+  section_order = c("Anuencia Previa","Outros Servicos")
 )
 
 }

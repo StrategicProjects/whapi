@@ -4,8 +4,8 @@ definitions into a normalized list-of-lists, applying a few rules:
 Accepts aliases label / name and maps them to title;
 Requires a non-empty title;
 Auto-generates id when missing using slugification plus uniqueness
-enforcement (e.g., "Buy Now" → "buy_now", duplicates become
-"buy_now_2", "buy_now_3", …).
+enforcement (e.g., "Buy Now" -&amp;gt; "buy_now", duplicates become
+"buy_now_2", "buy_now_3", ...).
 
 
 This is useful before building payloads for Whapi interactive endpoints
@@ -14,12 +14,12 @@ definitions into a normalized list-of-lists, applying a few rules:
 Accepts aliases label / name and maps them to title;
 Requires a non-empty title;
 Auto-generates id when missing using slugification plus uniqueness
-enforcement (e.g., "Buy Now" → "buy_now", duplicates become
-"buy_now_2", "buy_now_3", …).
+enforcement (e.g., "Buy Now" -&amp;gt; "buy_now", duplicates become
+"buy_now_2", "buy_now_3", ...).
 
 
 This is useful before building payloads for Whapi interactive endpoints
-(e.g., buttons, mixed actions, etc.).'><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+(e.g., buttons, mixed actions, etc.).'><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -27,7 +27,7 @@ This is useful before building payloads for Whapi interactive endpoints
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@ This is useful before building payloads for Whapi interactive endpoints
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Coerce and normalize button specs for Whapi interactive messages</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Coerce and normalize button specs for Whapi interactive messages</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_coerce_buttons_base.Rd</code></div>
     </div>
@@ -57,8 +57,8 @@ This is useful before building payloads for Whapi interactive endpoints
 definitions into a normalized <strong>list-of-lists</strong>, applying a few rules:</p><ul><li><p>Accepts aliases <code>label</code> / <code>name</code> and maps them to <code>title</code>;</p></li>
 <li><p>Requires a non-empty <code>title</code>;</p></li>
 <li><p>Auto-generates <code>id</code> when missing using slugification plus uniqueness
-enforcement (e.g., <code>"Buy Now" → "buy_now"</code>, duplicates become
-<code>"buy_now_2"</code>, <code>"buy_now_3"</code>, …).</p></li>
+enforcement (e.g., <code>"Buy Now" -&gt; "buy_now"</code>, duplicates become
+<code>"buy_now_2"</code>, <code>"buy_now_3"</code>, ...).</p></li>
 </ul><p>This is useful before building payloads for Whapi interactive endpoints
 (e.g., buttons, mixed actions, etc.).</p>
     </div>
@@ -91,12 +91,12 @@ unique <code>id</code> is created.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code>.whapi_slugify()</code>, <code><a href="whapi_make_unique.html">whapi_make_unique()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="whapi_slugify.html">whapi_slugify()</a></code>, <code><a href="whapi_make_unique.html">whapi_make_unique()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># From tibble (title only → ids auto-generated)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># From tibble (title only -&gt; ids auto-generated)</span></span></span>
 <span class="r-in"><span><span class="co"># tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |&gt;</span></span></span>
 <span class="r-in"><span><span class="co">#   whapi_coerce_buttons_base()</span></span></span>
 <span class="r-in"><span></span></span>

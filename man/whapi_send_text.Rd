@@ -39,7 +39,7 @@ environment variable WHAPI_TOKEN if not provided.}
 \item{mentions}{Character vector (optional). Numbers to mention (without "+").
 Remember to include @\if{html}{\out{<number>}} inside the message body as well.}
 
-\item{view_once}{Logical (optional). TRUE to mark message as “view once”.}
+\item{view_once}{Logical (optional). TRUE to mark message as "view once".}
 
 \item{timeout}{Numeric. Request timeout in seconds. Default: 30.}
 
@@ -53,17 +53,19 @@ the full API response in column \code{resp} (as list).
 Send a text message via Whapi.Cloud
 }
 \examples{
+\dontrun{
 # Make sure you set WHAPI_TOKEN in your environment or pass via argument
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
 
 # Simple example:
-# whapi_send_text("5581999999999", "Hello! Test message via API ✅")
+ whapi_send_text("5581999999999", "Hello! Test message via API")
 
 # With extra options:
-# whapi_send_text(
-#   to = "5581999999999",
-#   body = "Hello, @5581999999999 👋",
-#   mentions = c("5581999999999"),
-#   typing_time = 2, no_link_preview = TRUE
-# )
+ whapi_send_text(
+   to = "5581999999999",
+   body = "Hello, @5581999999999 Ola",
+   mentions = c("5581999999999"),
+   typing_time = 2, no_link_preview = TRUE
+ )
+ }
 }

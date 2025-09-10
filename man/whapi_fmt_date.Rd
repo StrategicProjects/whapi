@@ -4,7 +4,7 @@
 \alias{whapi_fmt_date}
 \title{Safe date formatting}
 \usage{
-whapi_fmt_date(x, fmt = "\%d/\%m/\%Y", na = "—")
+whapi_fmt_date(x, fmt = "\%d/\%m/\%Y", na = "-")
 }
 \arguments{
 \item{x}{Date or coercible to \code{Date}.}
@@ -24,5 +24,5 @@ is \code{NULL} or \code{NA}.
 whapi_fmt_date(Sys.Date())
 #> "31/08/2025"
 whapi_fmt_date(NA)
-#> "—"
+#> "-"
 }

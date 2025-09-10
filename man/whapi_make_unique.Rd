@@ -14,7 +14,7 @@ A character vector of the same length with unique IDs.
 }
 \description{
 Ensures that a character vector of identifiers is unique by appending
-numeric suffixes (\verb{_2}, \verb{_3}, …) when duplicates are found, while
+numeric suffixes (\verb{_2}, \verb{_3}, ...) when duplicates are found, while
 preserving the original order.
 }
 \details{
@@ -35,12 +35,12 @@ Algorithm:
 whapi_make_unique(c("yes", "no", "yes", "yes", "maybe", "no"))
 # -> "yes", "no", "yes_2", "yes_3", "maybe", "no_2"
 
-# Combined with .whapi_slugify
+# Combined with whapi_slugify
 titles <- c("Yes!", "Yes!", "No?")
 ids <- whapi_make_unique(whapi_slugify(titles))
 tibble::tibble(title = titles, id = ids)
 
 }
 \seealso{
-\code{\link[=.whapi_slugify]{.whapi_slugify()}} for slug-safe ID creation.
+\code{\link[=whapi_slugify]{whapi_slugify()}} for slug-safe ID creation.
 }

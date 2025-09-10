@@ -13,7 +13,7 @@ whapi_get_contact_profile(
 )
 }
 \arguments{
-\item{contacts}{Character vector. Phones in E.164 digits (no “+”) or chat IDs.}
+\item{contacts}{Character vector. Phones in E.164 digits (no "+") or chat IDs.}
 
 \item{token}{Bearer token. Defaults to env var \code{WHAPI_TOKEN}.}
 
@@ -52,11 +52,12 @@ higher-resolution avatars (if supported).
 }
 }
 \examples{
+\dontrun{
 # Sys.setenv(WHAPI_TOKEN = "your_token_here")
 # Single:
 # whapi_get_contact_profile("5581999999999")
 
 # Mixed (number + group JID):
 # whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))
-
+}
 }

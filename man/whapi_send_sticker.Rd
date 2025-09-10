@@ -39,18 +39,20 @@ Sends a WhatsApp sticker via \code{POST /messages/sticker}.
 The sticker must be in WebP format (\code{image/webp}).
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
+\dontrun{
+Sys.setenv(WHAPI_TOKEN = "your_token_here")
 
 # 1) Local file
-# whapi_send_sticker("558191812121",
-#   sticker = "sticker.webp", type = "file")
+ whapi_send_sticker("558191812121",
+   sticker = "sticker.webp", type = "file")
 
 # 2) Remote URL
-# whapi_send_sticker("558191812121",
-#   sticker = "https://example.com/condepe.webp", type = "url")
+ whapi_send_sticker("558191812121",
+   sticker = "https://example.com/condepe.webp", type = "url")
 
 # 3) Pre-encoded Base64
-# b64 <- openssl::base64_encode(readBin("sticker.webp","raw",file.info("sticker.webp")$size))
-# data_uri <- sprintf("data:image/webp;name=\%s;base64,\%s", basename("sticker.webp"), b64)
-# whapi_send_sticker("558191812121", sticker = data_uri, type = "base64")
+ b64 <- openssl::base64_encode(readBin("sticker.webp","raw",file.info("sticker.webp")$size))
+ data_uri <- sprintf("data:image/webp;name=\%s;base64,\%s", basename("sticker.webp"), b64)
+ whapi_send_sticker("558191812121", sticker = data_uri, type = "base64")
+ }
 }

@@ -8,7 +8,7 @@ whapi_send_list(
   to,
   body_text,
   list_sections,
-  list_label = "Choose…",
+  list_label = "Choose...",
   header_text = NULL,
   footer_text = NULL,
   token = Sys.getenv("WHAPI_TOKEN", unset = ""),
@@ -25,7 +25,7 @@ whapi_send_list(
 \verb{list(title = <chr>, rows = list(list(id=<chr>, title=<chr>, description=<chr>?), ...))}.}
 
 \item{list_label}{Character(1), optional. Button label that opens the list.
-Default: \code{"Choose…"}}
+Default: \code{"Choose..."}}
 
 \item{header_text, footer_text}{Character(1), optional. Header/footer texts.}
 
@@ -45,32 +45,33 @@ reuses \code{\link[=whapi_common_blocks]{whapi_common_blocks()}} to keep structu
 message types.
 }
 \examples{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# sections <- list(
-#   list(
-#     title = "Burgers",
-#     rows = list(
-#       list(id="b1", title="Plain",  description="No cheese, no sauce"),
-#       list(id="b2", title="Cheese", description="With melted cheese")
-#     )
-#   ),
-#   list(
-#     title = "Drinks",
-#     rows = list(
-#       list(id="d1", title="Water"),
-#       list(id="d2", title="Soda", description="Assorted flavors")
-#     )
-#   )
-# )
-# whapi_send_list(
-#   to = "5581999999999",
-#   body_text = "Choose your order:",
-#   list_sections = sections,
-#   list_label = "Open menu",
-#   header_text = "Our Menu",
-#   footer_text = "Thanks!"
-# )
-
+\dontrun{
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ sections <- list(
+   list(
+     title = "Burgers",
+     rows = list(
+       list(id="b1", title="Plain",  description="No cheese, no sauce"),
+       list(id="b2", title="Cheese", description="With melted cheese")
+     )
+   ),
+   list(
+     title = "Drinks",
+     rows = list(
+       list(id="d1", title="Water"),
+       list(id="d2", title="Soda", description="Assorted flavors")
+     )
+   )
+ )
+ whapi_send_list(
+   to = "5581999999999",
+   body_text = "Choose your order:",
+   list_sections = sections,
+   list_label = "Open menu",
+   header_text = "Our Menu",
+   footer_text = "Thanks!"
+ )
+}
 }
 \seealso{
 \code{\link[=whapi_validate_list_sections]{whapi_validate_list_sections()}}, \code{\link[=whapi_common_blocks]{whapi_common_blocks()}},

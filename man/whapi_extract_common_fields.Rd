@@ -52,18 +52,18 @@ parsed \code{POSIXct} column (\code{timestamp_dt}, UTC).
 }
 \examples{
 # Suppose `resp` is the parsed JSON returned from Whapi:
-# out <- list(
-#   sent = TRUE,
-#   message = list(
-#     id = "abc123",
-#     chat_id = "558199999999@s.whatsapp.net",
-#     timestamp = 1756426418,
-#     type = "location",
-#     status = "pending"
-#   )
-# )
-#
-# whapi_extract_common_fields(out, fallback_to = "558199999999")
+ out <- list(
+   sent = TRUE,
+   message = list(
+     id = "abc123",
+     chat_id = "558199999999@s.whatsapp.net",
+     timestamp = 1756426418,
+     type = "location",
+     status = "pending"
+   )
+ )
+
+ whapi_extract_common_fields(out, fallback_to = "558199999999")
 
 }
 \seealso{

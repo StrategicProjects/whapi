@@ -9,7 +9,7 @@ Whapi responses typically return a JSON object with a top-level element
 sent and a nested message object containing details such as id,
 status, timestamp, etc.
 This function consolidates those fields into a flat tibble, making it easier
-to work with message metadata in R."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.png"></head><body>
+to work with message metadata in R."><meta property="og:image" content="https://monitoramento.sepe.pe.gov.br/whapi/logo.svg"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -17,7 +17,7 @@ to work with message metadata in R."><meta property="og:image" content="https://
 
     <a class="navbar-brand me-2" href="../index.html">whapi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@ to work with message metadata in R."><meta property="og:image" content="https://
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Extract common fields from Whapi API responses</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Extract common fields from Whapi API responses</h1>
       <small class="dont-index">Source: <a href="https://github.com/StrategicProjects/whapi/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>whapi_extract_common_fields.Rd</code></div>
     </div>
@@ -104,18 +104,23 @@ parsed <code>POSIXct</code> column (<code>timestamp_dt</code>, UTC).</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Suppose `resp` is the parsed JSON returned from Whapi:</span></span></span>
-<span class="r-in"><span><span class="co"># out &lt;- list(</span></span></span>
-<span class="r-in"><span><span class="co">#   sent = TRUE,</span></span></span>
-<span class="r-in"><span><span class="co">#   message = list(</span></span></span>
-<span class="r-in"><span><span class="co">#     id = "abc123",</span></span></span>
-<span class="r-in"><span><span class="co">#     chat_id = "558199999999@s.whatsapp.net",</span></span></span>
-<span class="r-in"><span><span class="co">#     timestamp = 1756426418,</span></span></span>
-<span class="r-in"><span><span class="co">#     type = "location",</span></span></span>
-<span class="r-in"><span><span class="co">#     status = "pending"</span></span></span>
-<span class="r-in"><span><span class="co">#   )</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co"># whapi_extract_common_fields(out, fallback_to = "558199999999")</span></span></span>
+<span class="r-in"><span> <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>   sent <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   message <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>     id <span class="op">=</span> <span class="st">"abc123"</span>,</span></span>
+<span class="r-in"><span>     chat_id <span class="op">=</span> <span class="st">"558199999999@s.whatsapp.net"</span>,</span></span>
+<span class="r-in"><span>     timestamp <span class="op">=</span> <span class="fl">1756426418</span>,</span></span>
+<span class="r-in"><span>     type <span class="op">=</span> <span class="st">"location"</span>,</span></span>
+<span class="r-in"><span>     status <span class="op">=</span> <span class="st">"pending"</span></span></span>
+<span class="r-in"><span>   <span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="fu">whapi_extract_common_fields</span><span class="op">(</span><span class="va">out</span>, fallback_to <span class="op">=</span> <span class="st">"558199999999"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id     to            status timestamp timestamp_dt        type  sent </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> abc123 558199999999… pendi…    1.76<span style="color: #949494;">e</span>9 2025-08-29 <span style="color: #949494;">00:13:38</span> loca… TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: resp &lt;list&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
