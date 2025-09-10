@@ -24,7 +24,7 @@ navbar:
   components:
     github:
       icon: fa-github
-      href: https://github.com/StrategicProjects/whapi
+      href: https://github.com/StrategicProjects/whapi/
       aria-label: Github
 # navbar:
 #   structure:

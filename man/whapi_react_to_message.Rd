@@ -39,13 +39,3 @@ Sends (or removes) an \strong{emoji reaction} to a message via
 \code{PUT /messages/{MessageID}/reaction}.
 The endpoint returns only \code{{ "success": true | false }}.
 }
-\examples{
-\dontrun{
-Sys.setenv(WHAPI_TOKEN = "your_token_here")
-Add a reaction:
-whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "<heart emoji>")
-
-# Remove a reaction:
-whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")
-}
-}

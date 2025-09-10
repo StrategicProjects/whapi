@@ -8,7 +8,7 @@
 ![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/whapi) 
 ![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/whapi) 
 ![License](https://img.shields.io/badge/license-MIT-darkviolet.svg) 
-![](https://img.shields.io/badge/devel%20version-0.0.1-orangered.svg)
+![](https://img.shields.io/badge/devel%20version-0.0.2-orangered.svg)
 
 <!-- badges: end -->
 

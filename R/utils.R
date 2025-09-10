@@ -1778,16 +1778,6 @@ whapi_mark_message_read <- function(
 #' - `status`    - `"ok"` if success, `"error"` otherwise
 #' - `success`   - logical flag from API
 #' - `resp`      - raw response (list)
-#'
-#' @examples
-#' \dontrun{
-#' Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' Add a reaction:
-#' whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "<heart emoji>")
-#'
-#' # Remove a reaction:
-#' whapi_react_to_message("PsqXn5SAD5v7HRA-wHqB9tMeGQ", "")
-#'}
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble
 #' @export
