@@ -15,6 +15,9 @@
 > R wrapper for [whapi.cloud](https://whapi.cloud) — a lightweight
 > WhatsApp API.
 
+> whapi (the R package) is an independent project: it is not affiliated with,
+> maintained by or endorsed by Whapi.Cloud, WhatsApp or Meta.
+
 ### Overview
 
 The **whapi** package provides a tidyverse-friendly interface to the
