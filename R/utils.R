@@ -123,6 +123,7 @@ whapi_to_posixct <- function(x) {
 #' - `resp`: the full raw response list for inspection.
 #'
 #' @examples
+#' \dontrun{
 #' # Suppose `resp` is the parsed JSON returned from Whapi:
 #'  out <- list(
 #'    sent = TRUE,
@@ -136,7 +137,7 @@ whapi_to_posixct <- function(x) {
 #'  )
 #'
 #'  whapi_extract_common_fields(out, fallback_to = "558199999999")
-#'
+#'}
 #' @seealso
 #' Used internally in wrappers like [whapi_send_text()],
 #' [whapi_send_image()], [whapi_send_document()],
@@ -180,10 +181,6 @@ whapi_extract_common_fields <- function(out, fallback_to) {
 #' @param method Character(1). HTTP method (`"GET"`, `"POST"`, `"PUT"`). Default `"POST"`.
 #'
 #' @return Parsed JSON response as a list.
-#'
-#' @examples
-#' # out <- whapi_perform_request("messages/text", list(to="5581...", body="Hi"), method="POST")
-#' # out <- whapi_perform_request("messages/12345", list(status="read"), method="PUT")
 #'
 #' @importFrom httr2 request req_method req_headers req_body_json req_url_query
 #'   req_timeout req_retry req_error req_perform resp_body_json
@@ -252,7 +249,6 @@ whapi_perform_request <- function(
 #' @param no_link_preview Logical (optional). TRUE to disable link preview.
 #' @param wide_link_preview Logical (optional). TRUE to enable wide preview for links.
 #' @param mentions Character vector (optional). Numbers to mention (without "+").
-#'   Remember to include @<number> inside the message body as well.
 #' @param view_once Logical (optional). TRUE to mark message as "view once".
 #' @param timeout Numeric. Request timeout in seconds. Default: 30.
 #' @param verbose Logical. Print messages via cli? Default: TRUE.
@@ -352,7 +348,11 @@ whapi_send_text <- function(
 #'   device_id, status, and raw `resp`.
 #'
 #' @examples
-#' # whapi_get_message("PsobWy36679._7w-wKmB9tMeGQ")
+#' \dontrun{
+#' # Needs API Key
+#' whapi_get_message("PsobWy36679._7w-wKmB9tMeGQ")
+#'
+#' }
 #' @export
 whapi_get_message <- function(
     message_id,
@@ -580,14 +580,14 @@ whapi_common_blocks <- function(to, body_text, header_text = NULL, footer_text =
 #'
 #' @examples
 #' # From tibble (title only -> ids auto-generated)
-#' # tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
-#' #   whapi_coerce_buttons_base()
+#'  tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
+#'    whapi_coerce_buttons_base()
 #'
 #' # From list (mix with/without id)
-#' # whapi_coerce_buttons_base(list(
-#' #   list(title = "Website", url = "https://example.com"),
-#' #   list(title = "Website")  # will get an auto id too
-#' # ))
+#'  whapi_coerce_buttons_base(list(
+#'    list(title = "Website", url = "https://example.com"),
+#'    list(title = "Website")  # will get an auto id too
+#'  ))
 #'
 #' @seealso `whapi_slugify()`, `whapi_make_unique()`
 #'
@@ -690,9 +690,9 @@ whapi_coerce_buttons_base <- function(buttons, verbose = TRUE) {
 #'   and `type = "quick_reply"`.
 #'
 #' @examples
-#' # tibble::tribble(~title, "YES", "NO") |>
-#' #   whapi_coerce_buttons_base() |>
-#' #   whapi_coerce_buttons_quick()
+#'  tibble::tribble(~title, "YES", "NO") |>
+#'    whapi_coerce_buttons_base() |>
+#'    whapi_coerce_buttons_quick()
 #'
 #' @seealso [whapi_coerce_buttons_base()] for normalization; other coercers for
 #'   mixed buttons (url/call/copy).
@@ -763,20 +763,20 @@ whapi_coerce_buttons_quick <- function(buttons, verbose = TRUE) {
 #'
 #' @examples
 #' # Example with a tibble:
-#' # tibble::tribble(
-#' #   ~title,        ~type, ~url,
-#' #   "Website",     "url", "https://example.com",
-#' #   "Call Support","call", NA
-#' # ) |>
-#' #   whapi_coerce_buttons_base() |>
-#' #   whapi_coerce_buttons_mixed()
+#'  tibble::tribble(
+#'    ~title,        ~type, ~url, ~phone_number,
+#'    "Website",     "url", "https://example.com", NA,
+#'    "Call Support","call", NA, "5581999999999"
+#'  ) |>
+#'    whapi_coerce_buttons_base() |>
+#'    whapi_coerce_buttons_mixed()
 #'
 #' # Example with a list:
-#' # whapi_coerce_buttons_mixed(list(
-#' #   list(type="url",  title="Website", url="https://example.com"),
-#' #   list(type="call", title="Call us", phone_number="5581999999999"),
-#' #   list(type="copy", title="Copy OTP", copy_code="123456")
-#' # ))
+#'  whapi_coerce_buttons_mixed(list(
+#'    list(type="url",  title="Website", url="https://example.com"),
+#'    list(type="call", title="Call us", phone_number="5581999999999"),
+#'    list(type="copy", title="Copy OTP", copy_code="123456")
+#'  ))
 #'
 #' @seealso [whapi_coerce_buttons_base()] for normalization;
 #'   [whapi_coerce_buttons_quick()] for quick-reply buttons.
@@ -957,12 +957,12 @@ whapi_validate_list_sections <- function(list_sections, verbose = TRUE, trim = T
 #'
 #' @examples
 #' \dontrun{
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # whapi_send_quick_reply(
-#' #   to = "5581999999999",
-#' #   body_text = "Do you confirm?",
-#' #   buttons = tibble::tribble(~title, "YES", "NO")
-#' # )
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  whapi_send_quick_reply(
+#'    to = "5581999999999",
+#'    body_text = "Do you confirm?",
+#'    buttons = tibble::tribble(~title, "YES", "NO")
+#'  )
 #'}
 #' @seealso [whapi_coerce_buttons_quick()], [whapi_common_blocks()], [whapi_perform_request()]
 #' @export
@@ -1269,13 +1269,15 @@ whapi_send_list <- function(
 #'
 #' @examples
 #' \dontrun{
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
 #' # Single:
-#' # whapi_get_contact_profile("5581999999999")
+#'  whapi_get_contact_profile("5581999999999")
 #'
 #' # Mixed (number + group JID):
-#' # whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))
+#'  whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))
 #'}
+#'
 #' @importFrom tibble tibble
 #' @importFrom purrr map_chr map_dfr
 #' @importFrom cli cli_inform cli_abort
@@ -1700,8 +1702,8 @@ whapi_send_location <- function(
 #'
 #' @examples
 #' \dontrun{
-#' # Sys.setenv(WHAPI_TOKEN = "your_token_here")
-#' # whapi_mark_message_read("PsqXn5SAD5v7HRA-wHqB9tMeGQ")
+#'  Sys.setenv(WHAPI_TOKEN = "your_token_here")
+#'  whapi_mark_message_read("PsqXn5SAD5v7HRA-wHqB9tMeGQ")
 #' }
 #' @importFrom cli cli_inform cli_abort
 #' @importFrom tibble tibble

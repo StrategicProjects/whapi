@@ -40,12 +40,12 @@ automatically gets a unique slugified \code{id} if missing.
 }
 \examples{
 \dontrun{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# whapi_send_quick_reply(
-#   to = "5581999999999",
-#   body_text = "Do you confirm?",
-#   buttons = tibble::tribble(~title, "YES", "NO")
-# )
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ whapi_send_quick_reply(
+   to = "5581999999999",
+   body_text = "Do you confirm?",
+   buttons = tibble::tribble(~title, "YES", "NO")
+ )
 }
 }
 \seealso{

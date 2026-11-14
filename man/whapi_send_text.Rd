@@ -36,8 +36,7 @@ environment variable WHAPI_TOKEN if not provided.}
 
 \item{wide_link_preview}{Logical (optional). TRUE to enable wide preview for links.}
 
-\item{mentions}{Character vector (optional). Numbers to mention (without "+").
-Remember to include @\if{html}{\out{<number>}} inside the message body as well.}
+\item{mentions}{Character vector (optional). Numbers to mention (without "+").}
 
 \item{view_once}{Logical (optional). TRUE to mark message as "view once".}
 

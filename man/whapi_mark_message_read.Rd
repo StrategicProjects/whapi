@@ -36,7 +36,7 @@ This endpoint returns only a minimalistic ACK in the body:
 }
 \examples{
 \dontrun{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
-# whapi_mark_message_read("PsqXn5SAD5v7HRA-wHqB9tMeGQ")
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
+ whapi_mark_message_read("PsqXn5SAD5v7HRA-wHqB9tMeGQ")
 }
 }

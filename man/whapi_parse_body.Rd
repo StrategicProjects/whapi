@@ -18,8 +18,3 @@ Supports both \code{req$body} (already parsed) and \code{req$bodyRaw} (raw binar
 If the body looks like JSON (\code{{...}} or \verb{[...]}), it tries to parse it
 with \code{jsonlite::fromJSON}. Otherwise, it returns the raw text.
 }
-\examples{
-# Inside a Plumber endpoint:
-# parsed <- whapi_parse_body(req)
-# if (!is.null(parsed)) str(parsed)
-}

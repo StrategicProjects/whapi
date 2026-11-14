@@ -35,8 +35,3 @@ Generic helper wrapping httr2 to call Whapi endpoints.
 Supports methods: \code{"GET"}, \code{"POST"}, \code{"PUT"}.
 Handles JSON encoding, retries, errors, and CLI logging.
 }
-\examples{
-# out <- whapi_perform_request("messages/text", list(to="5581...", body="Hi"), method="POST")
-# out <- whapi_perform_request("messages/12345", list(status="read"), method="PUT")
-
-}

@@ -32,5 +32,9 @@ device_id, status, and raw \code{resp}.
 Get a WhatsApp message by ID (Whapi.Cloud)
 }
 \examples{
-# whapi_get_message("PsobWy36679._7w-wKmB9tMeGQ")
+\dontrun{
+# Needs API Key
+whapi_get_message("PsobWy36679._7w-wKmB9tMeGQ")
+
+}
 }

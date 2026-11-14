@@ -30,9 +30,9 @@ auto-generate \code{id} via slug + uniqueness) and then:
 }
 }
 \examples{
-# tibble::tribble(~title, "YES", "NO") |>
-#   whapi_coerce_buttons_base() |>
-#   whapi_coerce_buttons_quick()
+ tibble::tribble(~title, "YES", "NO") |>
+   whapi_coerce_buttons_base() |>
+   whapi_coerce_buttons_quick()
 
 }
 \seealso{

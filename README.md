@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# whapi <a href="https://monitoramento.sepe.pe.gov.br/whapi/"><img src="man/figures/logo.png" align="right" height="107" alt="whapi website" /></a>
+# whapi <a href="https://github.com/StrategicProjects/whapi/"><img src="man/figures/logo.png" align="right" height="107" alt="whapi website" /></a>
 
 <!-- badges: start -->
 
@@ -121,7 +121,7 @@ whapi_check_health()
 
 If you find any issues or have feature requests, feel free to create an
 issue or a pull request on
-[GitHub](https://github.com/StrategicProjects/whapi).
+[GitHub](https://github.com/StrategicProjects/whapi/issues).
 
 ------------------------------------------------------------------------
 

@@ -35,20 +35,20 @@ Enforces WhatsApp constraints: \strong{1 to 3} buttons per message.
 }
 \examples{
 # Example with a tibble:
-# tibble::tribble(
-#   ~title,        ~type, ~url,
-#   "Website",     "url", "https://example.com",
-#   "Call Support","call", NA
-# ) |>
-#   whapi_coerce_buttons_base() |>
-#   whapi_coerce_buttons_mixed()
+ tibble::tribble(
+   ~title,        ~type, ~url, ~phone_number,
+   "Website",     "url", "https://example.com", NA,
+   "Call Support","call", NA, "5581999999999"
+ ) |>
+   whapi_coerce_buttons_base() |>
+   whapi_coerce_buttons_mixed()
 
 # Example with a list:
-# whapi_coerce_buttons_mixed(list(
-#   list(type="url",  title="Website", url="https://example.com"),
-#   list(type="call", title="Call us", phone_number="5581999999999"),
-#   list(type="copy", title="Copy OTP", copy_code="123456")
-# ))
+ whapi_coerce_buttons_mixed(list(
+   list(type="url",  title="Website", url="https://example.com"),
+   list(type="call", title="Call us", phone_number="5581999999999"),
+   list(type="copy", title="Copy OTP", copy_code="123456")
+ ))
 
 }
 \seealso{

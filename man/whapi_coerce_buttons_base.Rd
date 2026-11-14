@@ -35,14 +35,14 @@ This is useful before building payloads for Whapi interactive endpoints
 }
 \examples{
 # From tibble (title only -> ids auto-generated)
-# tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
-#   whapi_coerce_buttons_base()
+ tibble::tribble(~title, "Buy Now", "Buy Now", "Learn More") |>
+   whapi_coerce_buttons_base()
 
 # From list (mix with/without id)
-# whapi_coerce_buttons_base(list(
-#   list(title = "Website", url = "https://example.com"),
-#   list(title = "Website")  # will get an auto id too
-# ))
+ whapi_coerce_buttons_base(list(
+   list(title = "Website", url = "https://example.com"),
+   list(title = "Website")  # will get an auto id too
+ ))
 
 }
 \seealso{

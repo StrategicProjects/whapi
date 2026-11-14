@@ -53,11 +53,13 @@ higher-resolution avatars (if supported).
 }
 \examples{
 \dontrun{
-# Sys.setenv(WHAPI_TOKEN = "your_token_here")
+
+ Sys.setenv(WHAPI_TOKEN = "your_token_here")
 # Single:
-# whapi_get_contact_profile("5581999999999")
+ whapi_get_contact_profile("5581999999999")
 
 # Mixed (number + group JID):
-# whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))
+ whapi_get_contact_profile(c("5581999999999", "1203630xxxxxx@g.us"))
 }
+
 }

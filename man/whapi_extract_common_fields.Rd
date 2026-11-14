@@ -51,6 +51,7 @@ The timestamp is returned both raw (numeric, seconds since epoch) and as a
 parsed \code{POSIXct} column (\code{timestamp_dt}, UTC).
 }
 \examples{
+\dontrun{
 # Suppose `resp` is the parsed JSON returned from Whapi:
  out <- list(
    sent = TRUE,
@@ -64,7 +65,7 @@ parsed \code{POSIXct} column (\code{timestamp_dt}, UTC).
  )
 
  whapi_extract_common_fields(out, fallback_to = "558199999999")
-
+}
 }
 \seealso{
 Used internally in wrappers like \code{\link[=whapi_send_text]{whapi_send_text()}},

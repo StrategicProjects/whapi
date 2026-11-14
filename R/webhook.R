@@ -204,11 +204,6 @@ whapi_log_pretty_json <- function(x, max = 2000L) {
 #' @param req A Plumber request object (list-like).
 #'
 #' @return A list representing the parsed body, or `NULL` if no body is found.
-#'
-#' @examples
-#' # Inside a Plumber endpoint:
-#' # parsed <- whapi_parse_body(req)
-#' # if (!is.null(parsed)) str(parsed)
 #' @export
 whapi_parse_body <- function(req) {
   if (!is.null(req$body)) {
